@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/Harshavardhanjakku/emolearn/blob/main/src/assets/logo.jpg" alt="EMO_LEARN Logo" width="280" />
+  <img src="https://github.com/Harshavardhanjakku/Emolearn/blob/main/src/assets/logo.png" alt="EMO_LEARN Logo" width="280" />
   
   # EmoLearn
   

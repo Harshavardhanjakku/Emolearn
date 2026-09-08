@@ -1,0 +1,71 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+build
+out
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.eslintcache
+.stylelintcache
+.prettiercache
+.env
+.env.*
+!.env.example
+
+# Python (backend)
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage/
+.python-version
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+backend/venv/
+
+# Backend runtime artifacts / data logs
+backend/**/emotion_log*.csv
+backend/**/emotion_log*.json
+backend/**/emotion_log.json.broken.*
+backend/**/emotion_log.json.broken.*.tmp
+
+# Vite / TS build caches
+.vite/
+*.tsbuildinfo
+
+# OS / tooling
+Thumbs.db
+npm-debug.log
+yarn-debug.log
+pnpm-debug.log
+*.pid
+*.seed
+*.db
+*.sqlite
+scripts

@@ -1,7 +1,16 @@
 // youtubeSummarizer.js
+<<<<<<< HEAD
 const GROQ_API_KEY = import.meta.env?.VITE_GROQ_API_KEY;
+=======
+// In Vite, only env vars prefixed with VITE_ are exposed to the browser.
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+>>>>>>> 3b6ca98 (added codes)
 
 export async function summarizeYouTubeVideo(videoUrl, mode = 'summary') {
+  if (!GROQ_API_KEY) {
+    console.error("[summarizeYouTubeVideo] Missing VITE_GROQ_API_KEY. Add it to a local .env file (do not commit secrets).");
+    return "Groq API key is missing. Set VITE_GROQ_API_KEY in your .env and restart the dev server.";
+  }
   // Extract video ID from YouTube URL
   const videoId = extractVideoId(videoUrl);
   

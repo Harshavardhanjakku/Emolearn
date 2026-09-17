@@ -1,7 +1,19 @@
 // groqGPT.js
+<<<<<<< HEAD
 const GROQ_API_KEY = import.meta.env?.VITE_GROQ_API_KEY
+=======
+
+// In Vite, only env vars prefixed with VITE_ are exposed to the browser.
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+
+// Keep secure
+>>>>>>> 3b6ca98 (added codes)
 
 export async function askGroq(topic, mode = 'simple') {
+  if (!GROQ_API_KEY) {
+    console.error("[askGroq] Missing VITE_GROQ_API_KEY. Add it to a local .env file (do not commit secrets).");
+    return "Groq API key is missing. Set VITE_GROQ_API_KEY in your .env and restart the dev server.";
+  }
   const callId = Math.random().toString(36).slice(2, 8)
   const startedAt = Date.now()
   console.log('[askGroq] start', { callId, mode, topicPreview: String(topic).slice(0, 120), time: new Date(startedAt).toISOString() })

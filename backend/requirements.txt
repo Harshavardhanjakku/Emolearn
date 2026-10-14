@@ -1,9 +1,9 @@
 flask
 flask-cors
-opencv-python
+opencv-python==4.10.0.84
 mediapipe
-deepface 
-numpy
+deepface>=0.0.93
+numpy==1.26.4
 pandas 
 matplotlib 
 librosa 

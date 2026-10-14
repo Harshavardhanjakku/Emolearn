@@ -40,13 +40,16 @@ CONCERN_RANK = {
 
 
 def merge_multimodal_emotion(facial: str, speech: str, mouse: str) -> str:
+    # Face always wins when a real facial label is present.
+    if facial and str(facial).strip() and facial != "Unknown":
+        return facial
     pool = [
         e
-        for e in (facial, speech, mouse)
+        for e in (speech, mouse)
         if e and str(e).strip() and e != "Unknown"
     ]
     if not pool:
-        return "Engaged"
+        return "Unknown"
     return max(pool, key=lambda e: CONCERN_RANK.get(e, 2))
 
 
@@ -54,10 +57,9 @@ def start_detector(detector_type: str):
     """Start a specific detector"""
     global detectors_running
     try:
-        if detector_type == "facial" and not detectors_running["facial"]:
+        if detector_type == "facial":
             start_facial_emotion_detection()
             detectors_running["facial"] = True
-            logger.info("Facial emotion detection started")
         elif detector_type == "speech" and not detectors_running["speech"]:
             start_speech_emotion_detection()
             detectors_running["speech"] = True
@@ -98,12 +100,11 @@ def update_detectors(camera_enabled: bool, microphone_enabled: bool):
         logger.info("Starting mouse emotion detection")
         start_detector("mouse")
     
-    # Start/stop facial detection based on camera state
-    if camera_enabled and not detectors_running["facial"]:
-        logger.info("Starting facial emotion detection")
+    # Camera on: keep a live facial loop (restart if a previous toggle killed it).
+    if camera_enabled:
         set_camera_session_allowed(True)
         start_detector("facial")
-    elif not camera_enabled and detectors_running["facial"]:
+    elif detectors_running["facial"]:
         logger.info("Stopping facial emotion detection")
         set_camera_session_allowed(False)
         stop_detector("facial")

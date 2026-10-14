@@ -10,10 +10,14 @@ import time
 from modules.emotion_combiner import (
     get_combined_emotion,
     update_detectors,
+    start_detector,
     detectors_running,
     merge_multimodal_emotion,
 )
-from modules.facial_emotion import get_facial_emotion as live_facial_emotion
+from modules.facial_emotion import (
+    get_facial_emotion as live_facial_emotion,
+    set_camera_session_allowed,
+)
 from modules.speech_emotion import get_speech_emotion as live_speech_emotion
 from modules.mouse_emotion import get_mouse_emotion as live_mouse_emotion, has_mouse_hook_input
 from modules.emotion_log_store import load_entries as _load_emotion_log_list
@@ -98,6 +102,9 @@ def start_emotion_detection():
                 try:
                     # Only run detection if at least one sensor is enabled
                     if camera_enabled or microphone_enabled:
+                        if camera_enabled:
+                            set_camera_session_allowed(True)
+                            start_detector("facial")
                         # Get combined emotion (this updates the JSON file)
                         emotion = get_combined_emotion()
                         print(f"Detected emotion: {emotion} (Camera: {camera_enabled}, Mic: {microphone_enabled})")
@@ -105,10 +112,10 @@ def start_emotion_detection():
                         # If no sensors are enabled, just sleep
                         print("No sensors enabled, skipping emotion detection")
                     
-                    time.sleep(5)  # Update every 5 seconds
+                    time.sleep(0.3)
                 except Exception as e:
                     print(f"Error in emotion detection loop: {e}")
-                    time.sleep(5)
+                    time.sleep(0.3)
         
         emotion_thread = threading.Thread(target=emotion_detection_loop, daemon=True)
         emotion_thread.start()

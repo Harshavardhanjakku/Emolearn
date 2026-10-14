@@ -17,6 +17,9 @@ from modules.emotion_combiner import (
 from modules.facial_emotion import (
     get_facial_emotion as live_facial_emotion,
     set_camera_session_allowed,
+    list_available_cameras,
+    set_camera_index,
+    get_camera_index,
 )
 from modules.speech_emotion import get_speech_emotion as live_speech_emotion
 from modules.mouse_emotion import get_mouse_emotion as live_mouse_emotion, has_mouse_hook_input
@@ -36,12 +39,20 @@ app.add_middleware(
 # Global flags to track sensor states and emotion detection
 emotion_detection_running = False
 emotion_thread = None
-camera_enabled = False
+camera_enabled = True
 microphone_enabled = False
 
 # Pydantic model for AI Tutor requests
 class TopicRequest(BaseModel):
     topic: str
+
+
+class SensorToggleRequest(BaseModel):
+    enabled: bool | None = None
+
+
+class CameraSelectRequest(BaseModel):
+    index: int
 
 def get_latest_emotion_data():
     """Get the latest emotion data from the JSON log file"""
@@ -129,9 +140,13 @@ def stop_emotion_detection():
 
 @app.on_event("startup")
 async def startup_event():
-    """Start emotion detection when the server starts"""
-    # Don't start detection automatically - wait for frontend to enable sensors
-    print("Server started - waiting for frontend to enable sensors")
+    """Turn the camera on at boot and start facial detection."""
+    global camera_enabled
+    camera_enabled = True
+    set_camera_session_allowed(True)
+    update_detectors(True, microphone_enabled)
+    start_emotion_detection()
+    print("Server started - camera on, emotion detection running")
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -216,18 +231,19 @@ def get_combined_emotion_endpoint():
     return {"emotion": "Unknown"}
 
 @app.post("/api/sensors/camera")
-def toggle_camera():
-    """Toggle camera state"""
+def toggle_camera(req: SensorToggleRequest = SensorToggleRequest()):
+    """Set camera on/off from the requested enabled flag (does not flip blindly)."""
     global camera_enabled, emotion_detection_running
-    camera_enabled = not camera_enabled
+    if req is not None and req.enabled is not None:
+        camera_enabled = bool(req.enabled)
+    else:
+        camera_enabled = not camera_enabled
     
-    print(f"🔄 Camera toggled: {camera_enabled}")
+    print(f"🔄 Camera set: {camera_enabled}")
     print(f"📊 Current state - Camera: {camera_enabled}, Mic: {microphone_enabled}, Detection: {emotion_detection_running}")
     
-    # Update detectors based on new camera state
     update_detectors(camera_enabled, microphone_enabled)
     
-    # Start emotion detection if any sensor is enabled
     if (camera_enabled or microphone_enabled) and not emotion_detection_running:
         print("🚀 Starting emotion detection...")
         start_emotion_detection()
@@ -240,7 +256,36 @@ def toggle_camera():
     return {
         "camera_enabled": camera_enabled,
         "microphone_enabled": microphone_enabled,
-        "detection_running": emotion_detection_running
+        "detection_running": emotion_detection_running,
+        "camera_index": get_camera_index(),
+    }
+
+
+@app.get("/api/sensors/cameras")
+def get_cameras():
+    """List built-in and external webcams the backend can open."""
+    return {
+        "cameras": list_available_cameras(),
+        "selected_index": get_camera_index(),
+        "camera_enabled": camera_enabled,
+    }
+
+
+@app.post("/api/sensors/camera/select")
+def select_camera(req: CameraSelectRequest):
+    """Use a specific webcam index (0 = default/built-in, 1+ = often USB/external)."""
+    global camera_enabled, emotion_detection_running
+    chosen = set_camera_index(req.index)
+    if not camera_enabled:
+        camera_enabled = True
+        set_camera_session_allowed(True)
+        update_detectors(True, microphone_enabled)
+        if not emotion_detection_running:
+            start_emotion_detection()
+    return {
+        "camera_index": chosen,
+        "camera_enabled": camera_enabled,
+        "cameras": list_available_cameras(),
     }
 
 @app.post("/api/sensors/microphone")
@@ -272,7 +317,8 @@ def get_sensor_status():
     return {
         "camera_enabled": camera_enabled,
         "microphone_enabled": microphone_enabled,
-        "detection_running": emotion_detection_running
+        "detection_running": emotion_detection_running,
+        "camera_index": get_camera_index(),
     }
 
 @app.post("/api/emotion/start")

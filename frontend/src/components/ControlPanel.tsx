@@ -2,6 +2,13 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import {
   Camera,
@@ -38,6 +45,8 @@ export const ControlPanel = ({
   const [showVoiceInput, setShowVoiceInput] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
   const [emotion, setEmotion] = useState<string | null>(null);
+  const [cameras, setCameras] = useState<{ index: number; name: string; available?: boolean }[]>([]);
+  const [selectedCamera, setSelectedCamera] = useState<string>("0");
   /** Ref avoids stale closures in the polling interval (useEffect deps are only sensors). */
   const lastEmotionRef = useRef<string | null>(null);
   const onEmotionChangeRef = useRef(onEmotionChange);
@@ -83,15 +92,42 @@ export const ControlPanel = ({
     notifyBackendSensorChange('camera', newCameraState);
   };
 
-  // Debug: print camera state changes
-  useEffect(() => {
-    console.log(`[ControlPanel] Camera is ${isCameraOn ? "ON" : "OFF"}`);
-    if (isCameraOn) {
-      // Ensure backend is also enabled when frontend defaults camera ON
-      notifyBackendSensorChange('camera', true);
+  const loadCameras = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/api/sensors/cameras");
+      if (!res.ok) return;
+      const data = await res.json();
+      const list = Array.isArray(data.cameras) ? data.cameras : [];
+      setCameras(list);
+      const selected = data.selected_index ?? list.find((c: { selected?: boolean }) => c.selected)?.index ?? 0;
+      setSelectedCamera(String(selected));
+    } catch (error) {
+      console.error("Failed to list cameras:", error);
     }
+  };
+
+  const handleCameraSelect = async (value: string) => {
+    setSelectedCamera(value);
+    setIsCameraOn(true);
+    try {
+      await fetch("http://localhost:8000/api/sensors/camera/select", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ index: Number(value) }),
+      });
+      await loadCameras();
+    } catch (error) {
+      console.error("Failed to select camera:", error);
+    }
+  };
+
+  // Turn camera on by default and load device list
+  useEffect(() => {
+    setIsCameraOn(true);
+    notifyBackendSensorChange("camera", true);
+    loadCameras();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCameraOn]);
+  }, []);
 
   const handleVoiceResult = (text: string) => {
     console.log("Recognized speech:", text);
@@ -231,12 +267,41 @@ export const ControlPanel = ({
           </Button>
         </div>
 
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-medium text-gray-700">Camera device</label>
+            <button type="button" className="text-xs text-blue-600 hover:underline" onClick={loadCameras}>
+              Refresh list
+            </button>
+          </div>
+          <Select value={selectedCamera} onValueChange={handleCameraSelect}>
+            <SelectTrigger className="bg-white">
+              <SelectValue placeholder="Choose a camera" />
+            </SelectTrigger>
+            <SelectContent>
+              {cameras.length === 0 ? (
+                <SelectItem value="0">Camera 0 (built-in / default)</SelectItem>
+              ) : (
+                cameras.map((cam) => (
+                  <SelectItem key={cam.index} value={String(cam.index)}>
+                    {cam.name}
+                    {cam.available === false ? " — not responding" : ""}
+                  </SelectItem>
+                ))
+              )}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-gray-500">
+            Camera turns on automatically. If the built-in webcam fails, pick an external USB camera here.
+          </p>
+        </div>
+
         {/* Camera Status Indicator */}
         {isCameraOn && (
           <div className="mt-4 p-3 bg-blue-100 rounded-lg shadow text-sm font-medium text-gray-800">
             📹 <strong>Camera Status:</strong> Active (Backend Processing)
             <div className="text-xs text-gray-600 mt-1">
-              Camera is being used by the emotion detection system
+              Using {cameras.find((c) => String(c.index) === selectedCamera)?.name || "default camera"}
             </div>
           </div>
         )}

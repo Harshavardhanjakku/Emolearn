@@ -4598,5 +4598,2381 @@
     "interaction_emotion": "Unknown",
     "final_emotion": "Unknown",
     "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:12",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:12",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:13",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:13",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:13",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:14",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:14",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:14",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:15",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:15",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:15",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:16",
+    "facial_emotion": "Unknown",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Unknown",
+    "value": 0.2
+  },
+  {
+    "time": "2026-10-14 06:19:16",
+    "facial_emotion": "Face Not Detected",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Face Not Detected",
+    "value": 0.25
+  },
+  {
+    "time": "2026-10-14 06:19:16",
+    "facial_emotion": "Face Not Detected",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Face Not Detected",
+    "value": 0.25
+  },
+  {
+    "time": "2026-10-14 06:19:17",
+    "facial_emotion": "Face Not Detected",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Face Not Detected",
+    "value": 0.25
+  },
+  {
+    "time": "2026-10-14 06:19:17",
+    "facial_emotion": "Face Not Detected",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Face Not Detected",
+    "value": 0.25
+  },
+  {
+    "time": "2026-10-14 06:19:17",
+    "facial_emotion": "Face Not Detected",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Face Not Detected",
+    "value": 0.25
+  },
+  {
+    "time": "2026-10-14 06:19:17",
+    "facial_emotion": "Face Not Detected",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Face Not Detected",
+    "value": 0.25
+  },
+  {
+    "time": "2026-10-14 06:19:18",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:18",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:19",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:19",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:19",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:20",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:20",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:20",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:21",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:21",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:21",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:22",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:22",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:22",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:23",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:23",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:23",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:24",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:24",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:24",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:25",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:25",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:25",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:26",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:26",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:26",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:27",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:27",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:27",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:28",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:28",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:28",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:29",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:29",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:29",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:30",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:30",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:30",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:31",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:31",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:31",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:32",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:32",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:32",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:33",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:33",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:33",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:34",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:34",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:34",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:35",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:35",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:35",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:36",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:36",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:36",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:37",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:37",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:37",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:38",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:38",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:38",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:39",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:39",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:39",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:40",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:40",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:40",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:41",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:41",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:41",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:42",
+    "facial_emotion": "Bored",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Bored",
+    "value": 0.45
+  },
+  {
+    "time": "2026-10-14 06:19:42",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:42",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:43",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:43",
+    "facial_emotion": "Frustrated",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Frustrated",
+    "value": 0.75
+  },
+  {
+    "time": "2026-10-14 06:19:44",
+    "facial_emotion": "Face Not Detected",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Face Not Detected",
+    "value": 0.25
+  },
+  {
+    "time": "2026-10-14 06:19:44",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:44",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:45",
+    "facial_emotion": "Frustrated",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Frustrated",
+    "value": 0.75
+  },
+  {
+    "time": "2026-10-14 06:19:45",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:45",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:46",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:46",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:46",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:47",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:47",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:47",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:48",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:48",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:48",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:49",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:49",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:49",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:50",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:50",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:50",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:51",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:51",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:52",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:52",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:52",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:53",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:53",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:53",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:54",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:54",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:54",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:55",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:55",
+    "facial_emotion": "Frustrated",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Frustrated",
+    "value": 0.75
+  },
+  {
+    "time": "2026-10-14 06:19:55",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:56",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:56",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:56",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:57",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:57",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:57",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:58",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:58",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:58",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:59",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:19:59",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:19:59",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:00",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:00",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:00",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:01",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:01",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:01",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:02",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:02",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:02",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:03",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:03",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:03",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:04",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:04",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:04",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:05",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:05",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:05",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:06",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:06",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:06",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:07",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:07",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:07",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:08",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:08",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:08",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:09",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:09",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:09",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:10",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:10",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:10",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:11",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:11",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:11",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:12",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:12",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:12",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:13",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:13",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:14",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:14",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:14",
+    "facial_emotion": "Frustrated",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Frustrated",
+    "value": 0.75
+  },
+  {
+    "time": "2026-10-14 06:20:15",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:20:15",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:20:15",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:20:16",
+    "facial_emotion": "Sleepy",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Sleepy",
+    "value": 0.5
+  },
+  {
+    "time": "2026-10-14 06:20:16",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:16",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:17",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:17",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:17",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:18",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:18",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:18",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:19",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:19",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:19",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:20",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:20",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:20",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:21",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:21",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:22",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:22",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:22",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:23",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:23",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:23",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:24",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:24",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:24",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:25",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:25",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:25",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:26",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:26",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:26",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:27",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:27",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:28",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:28",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:28",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:29",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:29",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:29",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:30",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:30",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:30",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:31",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:31",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:31",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:32",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:32",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:32",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:33",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:33",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:33",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:34",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:34",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:34",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:35",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:35",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:35",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:36",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:36",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:36",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:37",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:37",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:38",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:38",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:38",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:39",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:39",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:39",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:40",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:40",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:40",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:41",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:41",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:42",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:42",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:42",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:43",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:43",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:43",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:44",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:44",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:44",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:45",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:45",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:45",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:46",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:46",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:47",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:47",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:47",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:48",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:48",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:48",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:49",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:49",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:49",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:50",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:50",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:50",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:51",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:51",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:51",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:52",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:52",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:52",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:53",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:53",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
+  },
+  {
+    "time": "2026-10-14 06:20:53",
+    "facial_emotion": "Confused",
+    "voice_emotion": "Unknown",
+    "interaction_emotion": "Unknown",
+    "final_emotion": "Confused",
+    "value": 0.6
   }
 ]

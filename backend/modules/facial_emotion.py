@@ -26,7 +26,8 @@ STATE = {
     "log_data": [],
     "emotion_history": deque(maxlen=3),
     "camera_available": False,
-    "last_camera_check": 0
+    "last_camera_check": 0,
+    "reopen_camera": False,
 }
 
 # Emotion index mapping (keep as is)
@@ -56,6 +57,8 @@ face_mesh = mp_face_mesh.FaceMesh(
     min_detection_confidence=0.5
 )
 cap = None
+CAMERA_INDEX = 0
+_CAMERA_INDEX_LOCK = threading.Lock()
 
 _deepface_frame_lock = threading.Lock()
 _deepface_latest_frame = None
@@ -148,6 +151,86 @@ def check_camera_availability():
         logger.debug(f"Camera availability check failed: {str(e)}")
         STATE["camera_available"] = False
         return False
+
+def get_camera_index() -> int:
+    with _CAMERA_INDEX_LOCK:
+        return CAMERA_INDEX
+
+
+def _camera_label(index: int) -> str:
+    if index == 0:
+        return "Camera 0 (built-in / default)"
+    return f"Camera {index} (external)"
+
+
+def _try_open_index(index: int):
+    backends = []
+    if hasattr(cv2, "CAP_DSHOW"):
+        backends.append(cv2.CAP_DSHOW)
+    if hasattr(cv2, "CAP_MSMF"):
+        backends.append(cv2.CAP_MSMF)
+    backends.append(cv2.CAP_ANY)
+    for backend in backends:
+        test = cv2.VideoCapture(index, backend)
+        if test.isOpened():
+            ok, _ = test.read()
+            if ok:
+                return test
+        test.release()
+    return None
+
+
+def list_available_cameras(max_index: int = 6):
+    """Probe camera indexes so the UI can pick built-in or USB webcams."""
+    found = []
+    selected = get_camera_index()
+    active_open = cap is not None and cap.isOpened()
+    for i in range(max_index):
+        if active_open and i == selected:
+            found.append({"index": i, "name": _camera_label(i), "available": True, "selected": True})
+            continue
+        test = _try_open_index(i)
+        if test is not None:
+            test.release()
+            found.append({"index": i, "name": _camera_label(i), "available": True, "selected": i == selected})
+    if not any(c["index"] == selected for c in found):
+        found.insert(0, {"index": selected, "name": _camera_label(selected), "available": False, "selected": True})
+    if not found:
+        found.append({"index": 0, "name": _camera_label(0), "available": False, "selected": True})
+    return found
+
+
+def set_camera_index(index: int, reopen: bool = True) -> int:
+    """Switch to another webcam (USB/external) and reopen if the loop is live."""
+    global CAMERA_INDEX
+    with _CAMERA_INDEX_LOCK:
+        CAMERA_INDEX = int(index)
+        chosen = CAMERA_INDEX
+    if reopen:
+        with STATE["lock"]:
+            STATE["reopen_camera"] = True
+    logger.info("Camera device set to index %s", chosen)
+    return chosen
+
+
+def open_best_camera():
+    """Open the selected camera; if it fails, try other connected cameras."""
+    preferred = get_camera_index()
+    order = [preferred] + [i for i in range(6) if i != preferred]
+    for i in order:
+        opened = _try_open_index(i)
+        if opened is not None:
+            if i != preferred:
+                set_camera_index(i, reopen=False)
+                logger.info("Selected camera %s failed; using camera %s", preferred, i)
+            opened.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            opened.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+            opened.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+            STATE["camera_available"] = True
+            return opened
+    STATE["camera_available"] = False
+    return None
+
 
 def safe_camera_release():
     """Safely release camera resources."""
@@ -250,13 +333,10 @@ def facial_emotion_loop():
             logger.info("Camera session stopped — exiting facial loop.")
             return
 
-        cap = cv2.VideoCapture(0)
+        cap = open_best_camera()
         loop_cap = cap
-        if not cap.isOpened():
-            raise Exception("Failed to open webcam for main detection loop.")
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-        cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        if cap is None or not cap.isOpened():
+            raise Exception("Failed to open any webcam. Plug in an external camera and pick it in the UI.")
         gaze_away_counter = 0
         eyes_closed_start = None
         yawn_start = None
@@ -268,6 +348,18 @@ def facial_emotion_loop():
             if not CAMERA_SESSION_ALLOWED.is_set():
                 break
             try:
+                with STATE["lock"]:
+                    need_reopen = STATE.get("reopen_camera")
+                    if need_reopen:
+                        STATE["reopen_camera"] = False
+                if need_reopen or cap is None or not cap.isOpened():
+                    if cap is loop_cap:
+                        safe_camera_release()
+                    cap = open_best_camera()
+                    loop_cap = cap
+                    if cap is None or not cap.isOpened():
+                        time.sleep(0.4)
+                        continue
                 ret, frame = cap.read()
                 if not ret:
                     consecutive_failures += 1

@@ -1,8 +1,8 @@
-# NeuroNudge (EmoLearn Nexus)
+# Emolearn
 
-NeuroNudge is a **reactive learning assistant**: it detects learner emotion signals (camera/voice/interaction), merges them into a single “current emotion”, and uses that context to trigger **AI tutoring interventions** (explain differently, story mode, quizzes, study resources, and YouTube summarization).
+Emolearn is a **reactive learning assistant**: it detects learner emotion signals (camera/voice/interaction), merges them into a single “current emotion”, and uses that context to trigger **AI tutoring interventions** (explain differently, story mode, quizzes, study resources, and YouTube summarization).
 
-> Repo link you shared: `https://github.com/Fayazmohammed9985/NeuroNudge.git`
+> Repo link you shared: `https://github.com/Fayazmohammed9985/Emolearn.git`
 
 ## What’s inside
 

@@ -13,9 +13,11 @@ from modules.emotion_combiner import (
     start_detector,
     detectors_running,
     merge_multimodal_emotion,
+    snapshot_combined_emotion,
 )
 from modules.facial_emotion import (
     get_facial_emotion as live_facial_emotion,
+    get_facial_emotion_record as live_facial_record,
     set_camera_session_allowed,
     list_available_cameras,
     set_camera_index,
@@ -107,26 +109,16 @@ def start_emotion_detection():
         emotion_detection_running = True
         
         def emotion_detection_loop():
-            # Sensor POST handlers already call update_detectors; avoid re-running every 5s (log spam + races).
+            # Sensor POST handlers already call update_detectors.
             update_detectors(camera_enabled, microphone_enabled)
             while emotion_detection_running:
                 try:
-                    # Only run detection if at least one sensor is enabled
                     if camera_enabled or microphone_enabled:
-                        if camera_enabled:
-                            set_camera_session_allowed(True)
-                            start_detector("facial")
-                        # Get combined emotion (this updates the JSON file)
-                        emotion = get_combined_emotion()
-                        print(f"Detected emotion: {emotion} (Camera: {camera_enabled}, Mic: {microphone_enabled})")
-                    else:
-                        # If no sensors are enabled, just sleep
-                        print("No sensors enabled, skipping emotion detection")
-                    
-                    time.sleep(0.3)
+                        get_combined_emotion()
+                    time.sleep(1.0)
                 except Exception as e:
                     print(f"Error in emotion detection loop: {e}")
-                    time.sleep(0.3)
+                    time.sleep(1.0)
         
         emotion_thread = threading.Thread(target=emotion_detection_loop, daemon=True)
         emotion_thread.start()
@@ -162,30 +154,15 @@ def get_emotion():
 @app.get("/api/emotion/latest")
 def get_latest_emotion():
     """Get the latest emotion data with all fields"""
-    latest_data = get_latest_emotion_data()
-    if latest_data:
-        return latest_data
-    face = _live_facial_safe()
-    voice = _live_voice_safe()
-    mouse = _live_interaction_safe()
-    if face or voice or mouse:
-        fin = _live_combined_fallback()
-        return {
-            "time": "",
-            "facial_emotion": face or "Unknown",
-            "voice_emotion": voice or "Unknown",
-            "interaction_emotion": mouse or "Unknown",
-            "final_emotion": fin,
-            "value": 0.0,
-        }
-    return {
-        "time": "",
-        "facial_emotion": "Unknown",
-        "voice_emotion": "Unknown",
-        "interaction_emotion": "Unknown",
-        "final_emotion": "Unknown",
-        "value": 0.0
-    }
+    snap = snapshot_combined_emotion()
+    rec = live_facial_record() if camera_enabled else {"time": ""}
+    if rec.get("time"):
+        snap["time"] = rec["time"]
+    elif not snap.get("time"):
+        latest_data = get_latest_emotion_data()
+        if latest_data:
+            return latest_data
+    return snap
 
 @app.get("/api/emotion/interaction")
 def get_interaction_emotion():
@@ -224,7 +201,8 @@ def get_voice_emotion():
 def get_combined_emotion_endpoint():
     """Live combined emotion (same merge as get_combined_emotion, without writing the log)."""
     if camera_enabled or microphone_enabled:
-        return {"emotion": _live_combined_fallback()}
+        snap = snapshot_combined_emotion()
+        return {"emotion": snap["final_emotion"]}
     latest_data = get_latest_emotion_data()
     if latest_data:
         return {"emotion": latest_data.get("final_emotion", "Unknown")}
@@ -681,5 +659,5 @@ def get_camera_status():
         }
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
 

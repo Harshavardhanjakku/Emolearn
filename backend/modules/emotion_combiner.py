@@ -1,5 +1,6 @@
 from modules.facial_emotion import (
     get_facial_emotion,
+    get_facial_emotion_record,
     start_facial_emotion_detection,
     stop_facial_emotion_detection,
     set_camera_session_allowed,
@@ -41,7 +42,13 @@ CONCERN_RANK = {
 
 def merge_multimodal_emotion(facial: str, speech: str, mouse: str) -> str:
     # Face always wins when a real facial label is present.
-    if facial and str(facial).strip() and facial != "Unknown":
+    # Mouse/voice must not replace a live facial class; missing face is Unknown.
+    facial_ok = (
+        facial
+        and str(facial).strip()
+        and facial not in ("Unknown", "Face Not Detected")
+    )
+    if facial_ok:
         return facial
     pool = [
         e
@@ -53,13 +60,19 @@ def merge_multimodal_emotion(facial: str, speech: str, mouse: str) -> str:
     return max(pool, key=lambda e: CONCERN_RANK.get(e, 2))
 
 
+_last_logged_key = None
+
+
 def start_detector(detector_type: str):
     """Start a specific detector"""
     global detectors_running
     try:
         if detector_type == "facial":
-            start_facial_emotion_detection()
-            detectors_running["facial"] = True
+            if not detectors_running["facial"]:
+                start_facial_emotion_detection()
+                detectors_running["facial"] = True
+            else:
+                start_facial_emotion_detection()
         elif detector_type == "speech" and not detectors_running["speech"]:
             start_speech_emotion_detection()
             detectors_running["speech"] = True
@@ -122,18 +135,14 @@ def update_detectors(camera_enabled: bool, microphone_enabled: bool):
 def get_combined_emotion():
     try:
         # Get emotions from running detectors only
-        facial = get_facial_emotion() if detectors_running["facial"] else "Unknown"
+        rec = get_facial_emotion_record() if detectors_running["facial"] else {"emotion": "Unknown", "time": ""}
+        facial = rec.get("emotion") or "Unknown"
         speech = get_speech_emotion() if detectors_running["speech"] else "Unknown"
         mouse = (
             get_mouse_emotion()
             if detectors_running["mouse"] and has_mouse_hook_input()
             else "Unknown"
         )
-
-        # Debug logging to see what each detector is returning
-        logger.info(f"DEBUG - Facial emotion: {facial}")
-        logger.info(f"DEBUG - Speech emotion: {speech}")
-        logger.info(f"DEBUG - Mouse emotion: {mouse}")
 
         final = merge_multimodal_emotion(facial, speech, mouse)
 
@@ -148,7 +157,7 @@ def get_combined_emotion():
             "Unknown": 0.2
         }
         value = emotion_weights.get(final, 0.0)
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        now = rec.get("time") or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         log_entry = {
             "time": now,
@@ -159,16 +168,59 @@ def get_combined_emotion():
             "value": value
         }
 
-        try:
-            append_emotion_log_entry(log_entry)
-        except Exception as e:
-            logger.error(f"Error writing to emotion_log.json: {e}")
-
+        persist_combined_snapshot(log_entry)
         return final
 
     except Exception as e:
         logger.error(f"Error in get_combined_emotion: {e}")
-        return "Engaged"
+        return "Unknown"
+
+
+def persist_combined_snapshot(log_entry: dict) -> None:
+    """Write emotion_log.json only when the classification meaningfully changes."""
+    global _last_logged_key
+    key = (
+        log_entry.get("facial_emotion"),
+        log_entry.get("voice_emotion"),
+        log_entry.get("interaction_emotion"),
+        log_entry.get("final_emotion"),
+    )
+    if key == _last_logged_key:
+        return
+    _last_logged_key = key
+    try:
+        append_emotion_log_entry(log_entry)
+    except Exception as e:
+        logger.error(f"Error writing to emotion_log.json: {e}")
+
+
+def snapshot_combined_emotion():
+    """Live merge without appending a log row (used by /api/emotion/combined)."""
+    rec = get_facial_emotion_record() if detectors_running["facial"] else {"emotion": "Unknown", "time": ""}
+    facial = rec.get("emotion") or "Unknown"
+    speech = get_speech_emotion() if detectors_running["speech"] else "Unknown"
+    mouse = (
+        get_mouse_emotion()
+        if detectors_running["mouse"] and has_mouse_hook_input()
+        else "Unknown"
+    )
+    final = merge_multimodal_emotion(facial, speech, mouse)
+    return {
+        "time": rec.get("time") or datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "facial_emotion": facial,
+        "voice_emotion": speech,
+        "interaction_emotion": mouse,
+        "final_emotion": final,
+        "value": {
+            "Bored": 0.45,
+            "Confused": 0.6,
+            "Frustrated": 0.75,
+            "Sleepy": 0.5,
+            "Face Not Detected": 0.25,
+            "Engaged": 0.9,
+            "Unknown": 0.2,
+        }.get(final, 0.0),
+    }
 
 if __name__ == "__main__":
     print("🧠 Starting Combined Emotion Check...")

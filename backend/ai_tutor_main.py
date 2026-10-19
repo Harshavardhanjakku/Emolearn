@@ -33,7 +33,7 @@ class TopicRequest(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "🧠 EmoLearn Nexus Backend is Running!"}
+    return {"message": "🧠 Emolearn Backend is Running!"}
 
 @app.get("/api/emotion")
 def get_emotion():

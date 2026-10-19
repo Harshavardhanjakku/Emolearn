@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage/
+.python-version
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Runtime emotion logs
+emotion_log*.csv
+emotion_log*.json
+emotion_log.json.broken.*
+emotion_log.json.broken.*.tmp
+
+# Logs / local artifacts
+*.log
+*.pid
+*.seed
+*.db
+*.sqlite

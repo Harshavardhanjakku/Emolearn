@@ -1,7 +1,6 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-from deepface import DeepFace
 import time
 import pandas as pd
 from datetime import datetime
@@ -9,7 +8,18 @@ import threading
 import logging
 import os
 from collections import deque
+from types import SimpleNamespace
+from urllib.request import urlretrieve
 import traceback
+
+from modules.facial_classifier import (
+    CueTemporalState,
+    EmotionSmoother,
+    FaceCues,
+    classify_frame,
+    extract_face_cues,
+    normalize_deepface_probs,
+)
 
 # Suppress TensorFlow warnings
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
@@ -22,75 +32,99 @@ logger = logging.getLogger(__name__)
 STATE = {
     "running": False,
     "last_emotion": "Unknown",
+    "last_emotion_time": "",
     "lock": threading.Lock(),
     "log_data": [],
-    "emotion_history": deque(maxlen=3),
+    "emotion_history": deque(maxlen=24),
     "camera_available": False,
     "last_camera_check": 0,
     "reopen_camera": False,
+    "loop_ident": None,
+    "last_frame_time": 0.0,
 }
 
 # Emotion index mapping (keep as is)
 emotion_index = {"Engaged": 0, "Confused": 1, "Frustrated": 2, "Bored": 3, "Sleepy": 4, "Unknown": 5}
 
-# Constants for emotion detection thresholds (tuned for less sensitivity)
-# DeepFace returns emotion dict values on 0-100 (%). Older code used thresholds like 0.40 vs that scale,
-# so almost any non-zero angry score beat the threshold → constant "Frustrated".
-FRUSTRATION_PROB_THRESHOLD = 48.0  # Min % for max(angry, disgust) vs calm_peak + margin below
-FRUSTRATION_MARGIN_OVER_CALM = 10.0  # stress must exceed best(neutral,happy) by this many points (0-100)
-FRUSTRATION_EXTREME = 62.0  # strong anger/disgust signal (0-100)
-EAR_THRESHOLD_SLEEPY = 0.20       # Slightly increased for less sensitivity to minor blinks
-MAR_THRESHOLD_YAWN = 0.45         # Slightly increased for less sensitivity to minor mouth movements
-PITCH_NEUTRAL_RANGE = (0.00, 0.15)  # Keep as is for now
-EYES_CLOSED_DURATION_SLEEPY = 0.35
-YAWN_DURATION_BORED = 0.6
-NO_FACE_DURATION_BORED = 2.0
-GAZE_AWAY_THRESHOLD = 45          # Increased from 30 for less sensitivity to gaze shifts
-HEAD_TILT_THRESHOLD = 0.12        # Increased from 0.1 for less sensitivity to head tilts
-EMOTION_LOCK_DURATION = 0
+# DeepFace FER classes are angry/disgust/fear/happy/sad/surprise/neutral.
+# Product labels are produced in facial_classifier.py from scores + landmarks.
+DEEPFACE_MIN_INTERVAL_S = 0.35
 CAMERA_RETRY_INTERVAL = 1
 
-# --- MediaPipe Setup ---
-mp_face_mesh = mp.solutions.face_mesh
-face_mesh = mp_face_mesh.FaceMesh(
-    max_num_faces=1,
-    min_detection_confidence=0.5
+# --- MediaPipe Setup (Tasks FaceLandmarker; mp.solutions was removed in 1.x) ---
+_FACE_LANDMARKER_URL = (
+    "https://storage.googleapis.com/mediapipe-models/face_landmarker/"
+    "face_landmarker/float16/1/face_landmarker.task"
 )
+_FACE_LANDMARKER_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "models",
+    "face_landmarker.task",
+)
+
+
+def _ensure_face_landmarker_model():
+    os.makedirs(os.path.dirname(_FACE_LANDMARKER_PATH), exist_ok=True)
+    if os.path.isfile(_FACE_LANDMARKER_PATH) and os.path.getsize(_FACE_LANDMARKER_PATH) > 1000:
+        return _FACE_LANDMARKER_PATH
+    logger.info("Downloading MediaPipe face landmarker model...")
+    urlretrieve(_FACE_LANDMARKER_URL, _FACE_LANDMARKER_PATH)
+    return _FACE_LANDMARKER_PATH
+
+
+class _LandmarkMesh:
+    """Keeps landmarks.landmark[i] access used by classifier helpers."""
+
+    def __init__(self, points):
+        self.landmark = points
+
+
+class _FaceMeshAdapter:
+    def __init__(self, max_num_faces=1, min_detection_confidence=0.5):
+        from mediapipe.tasks.python.core.base_options import BaseOptions
+        from mediapipe.tasks.python.vision import (
+            FaceLandmarker,
+            FaceLandmarkerOptions,
+            RunningMode,
+        )
+
+        options = FaceLandmarkerOptions(
+            base_options=BaseOptions(model_asset_path=_ensure_face_landmarker_model()),
+            running_mode=RunningMode.VIDEO,
+            num_faces=max_num_faces,
+            min_face_detection_confidence=min_detection_confidence,
+        )
+        self._landmarker = FaceLandmarker.create_from_options(options)
+        self._last_ts = -1
+
+    def process(self, rgb_frame):
+        ts = int(time.time() * 1000)
+        if ts <= self._last_ts:
+            ts = self._last_ts + 1
+        self._last_ts = ts
+        image = mp.Image(
+            image_format=mp.ImageFormat.SRGB,
+            data=np.ascontiguousarray(rgb_frame),
+        )
+        result = self._landmarker.detect_for_video(image, ts)
+        faces = [_LandmarkMesh(pts) for pts in (result.face_landmarks or [])]
+        return SimpleNamespace(multi_face_landmarks=faces or None)
+
+
+face_mesh = _FaceMeshAdapter(max_num_faces=1, min_detection_confidence=0.5)
 cap = None
 CAMERA_INDEX = 0
 _CAMERA_INDEX_LOCK = threading.Lock()
 
 _deepface_frame_lock = threading.Lock()
 _deepface_latest_frame = None
-_deepface_result = "Unknown"
+_deepface_probs = None
 _deepface_worker_started = False
-
-
-def _map_deepface_result(deepface_result):
-    dom_emotion = deepface_result[0]["dominant_emotion"]
-    emotion_probabilities = deepface_result[0]["emotion"]
-    angry_p = emotion_probabilities.get("angry", 0)
-    disgust_p = emotion_probabilities.get("disgust", 0)
-    neutral_p = emotion_probabilities.get("neutral", 0)
-    happy_p = emotion_probabilities.get("happy", 0)
-    stress = max(angry_p, disgust_p)
-    calm_peak = max(neutral_p, happy_p)
-    stressed_enough_vs_calm = (
-        stress >= FRUSTRATION_PROB_THRESHOLD
-        and stress >= calm_peak + FRUSTRATION_MARGIN_OVER_CALM
-    )
-    extreme_stress = stress >= FRUSTRATION_EXTREME and stress >= calm_peak + 5.0
-    if stressed_enough_vs_calm or extreme_stress:
-        return "Frustrated"
-    if dom_emotion in ["neutral", "happy"]:
-        return "Engaged"
-    if dom_emotion in ["sad", "fear"]:
-        return "Confused"
-    return "Unknown"
+_deepface_last_submit = 0.0
 
 
 def _deepface_worker():
-    global _deepface_latest_frame, _deepface_result
+    global _deepface_latest_frame, _deepface_probs
     while True:
         if not CAMERA_SESSION_ALLOWED.is_set():
             time.sleep(0.05)
@@ -99,13 +133,16 @@ def _deepface_worker():
             frame = _deepface_latest_frame
             _deepface_latest_frame = None
         if frame is None:
-            time.sleep(0.01)
+            time.sleep(0.02)
             continue
         try:
+            from deepface import DeepFace
+
             deepface_result = DeepFace.analyze(
                 frame, actions=["emotion"], enforce_detection=False, silent=True
             )
-            _deepface_result = _map_deepface_result(deepface_result)
+            if deepface_result:
+                _deepface_probs = normalize_deepface_probs(deepface_result[0].get("emotion") or {})
         except Exception:
             pass
 
@@ -118,7 +155,13 @@ def _ensure_deepface_worker():
 
 
 def _submit_frame_for_deepface(frame):
-    global _deepface_latest_frame
+    global _deepface_latest_frame, _deepface_last_submit
+    if frame is None or getattr(frame, "size", 0) == 0:
+        return
+    now = time.time()
+    if now - _deepface_last_submit < DEEPFACE_MIN_INTERVAL_S:
+        return
+    _deepface_last_submit = now
     with _deepface_frame_lock:
         _deepface_latest_frame = frame.copy()
 
@@ -163,19 +206,50 @@ def _camera_label(index: int) -> str:
     return f"Camera {index} (external)"
 
 
-def _try_open_index(index: int):
+def _camera_backends():
     backends = []
     if hasattr(cv2, "CAP_DSHOW"):
         backends.append(cv2.CAP_DSHOW)
     if hasattr(cv2, "CAP_MSMF"):
         backends.append(cv2.CAP_MSMF)
     backends.append(cv2.CAP_ANY)
-    for backend in backends:
+    return backends
+
+
+def _configure_capture(capture):
+    """Keep a stable 640x480 stream. Do not set BUFFERSIZE — it drops DirectShow reads."""
+    capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
+
+def _warmup_capture(capture, attempts: int = 20) -> bool:
+    for _ in range(attempts):
+        frame = _read_frame(capture)
+        if frame is not None:
+            return True
+        time.sleep(0.05)
+    return False
+
+
+def _read_frame(capture):
+    """Return a valid BGR frame, or None. Never releases the camera."""
+    if capture is None or not capture.isOpened():
+        return None
+    ok, frame = capture.read()
+    if not ok or frame is None or getattr(frame, "size", 0) == 0:
+        return None
+    return frame
+
+
+def _try_open_index(index: int):
+    for backend in _camera_backends():
         test = cv2.VideoCapture(index, backend)
-        if test.isOpened():
-            ok, _ = test.read()
-            if ok:
-                return test
+        if not test.isOpened():
+            test.release()
+            continue
+        _configure_capture(test)
+        if _warmup_capture(test):
+            return test
         test.release()
     return None
 
@@ -223,9 +297,6 @@ def open_best_camera():
             if i != preferred:
                 set_camera_index(i, reopen=False)
                 logger.info("Selected camera %s failed; using camera %s", preferred, i)
-            opened.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-            opened.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-            opened.set(cv2.CAP_PROP_BUFFERSIZE, 1)
             STATE["camera_available"] = True
             return opened
     STATE["camera_available"] = False
@@ -286,14 +357,11 @@ def calculate_pitch(landmarks):
         return 0
 
 def is_head_tilted(landmarks):
-    """Check if head is tilted left or right (roll)."""
+    """Legacy helper; classification uses CueTemporalState instead."""
     try:
-        # Using left (234) and right (454) temples or ears for roll detection
-        # Increased threshold for less sensitivity
-        return abs(landmarks.landmark[234].y - landmarks.landmark[454].y) > HEAD_TILT_THRESHOLD
+        return abs(landmarks.landmark[234].y - landmarks.landmark[454].y) > 0.16
     except Exception as e:
-        logger.error(f"Error checking head tilt: {str(e)}")
-        logger.debug(traceback.format_exc())
+        logger.debug(f"Error checking head tilt: {str(e)}")
         return False
 
 # --- Calibration and Smoothing Functions ---
@@ -327,7 +395,6 @@ def facial_emotion_loop():
         STATE["loop_ident"] = my_id
     try:
         _ensure_deepface_worker()
-        calibrated_eye_y = calibrate()
 
         if not CAMERA_SESSION_ALLOWED.is_set() or not STATE["running"]:
             logger.info("Camera session stopped — exiting facial loop.")
@@ -337,13 +404,11 @@ def facial_emotion_loop():
         loop_cap = cap
         if cap is None or not cap.isOpened():
             raise Exception("Failed to open any webcam. Plug in an external camera and pick it in the UI.")
-        gaze_away_counter = 0
-        eyes_closed_start = None
-        yawn_start = None
-        no_face_start = None
         consecutive_failures = 0
-        max_consecutive_failures = 10
-        
+        temporal = CueTemporalState()
+        smoother = EmotionSmoother()
+        logger.info("Proctoring camera stream started — analyzing ~1s emotion windows")
+
         while STATE["running"]:
             if not CAMERA_SESSION_ALLOWED.is_set():
                 break
@@ -352,144 +417,60 @@ def facial_emotion_loop():
                     need_reopen = STATE.get("reopen_camera")
                     if need_reopen:
                         STATE["reopen_camera"] = False
-                if need_reopen or cap is None or not cap.isOpened():
+                if need_reopen:
                     if cap is loop_cap:
                         safe_camera_release()
                     cap = open_best_camera()
                     loop_cap = cap
+                    consecutive_failures = 0
                     if cap is None or not cap.isOpened():
                         time.sleep(0.4)
                         continue
-                ret, frame = cap.read()
-                if not ret:
+                frame = _read_frame(cap)
+                if frame is None:
                     consecutive_failures += 1
-                    if consecutive_failures > max_consecutive_failures:
-                        logger.warning("Too many consecutive frame failures, checking camera availability")
-                        if not check_camera_availability():
-                            logger.warning("Camera not available, using fallback emotion")
-                            time.sleep(0.2)
-                            continue
-                        consecutive_failures = 0
-                    else:
-                        logger.debug("Failed to read frame from webcam, retrying...")
-                        time.sleep(0.1)  # Reduced sleep time
-                        continue
+                    if consecutive_failures == 30:
+                        logger.warning("Waiting for camera frames (device still held open)")
+                    time.sleep(0.02)
+                    continue
 
-                consecutive_failures = 0  # Reset failure counter on success
+                consecutive_failures = 0
+                now = time.time()
+                with STATE["lock"]:
+                    STATE["last_frame_time"] = now
                 _submit_frame_for_deepface(frame)
                 rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 results = face_mesh.process(rgb_frame)
                 h, w, _ = frame.shape
-                current_emotion = "Unknown"  # Default for this frame
 
                 if results.multi_face_landmarks:
-                    no_face_start = None;  # Reset no face timer
-                    for face_landmarks in results.multi_face_landmarks:
-                        left_eye_landmarks = [33, 160, 158, 133, 153, 144]
-                        right_eye_landmarks = [362, 385, 387, 263, 373, 380]
-                        mouth_landmarks = [61, 291, 0, 17, 405, 185, 13]
+                    face_landmarks = results.multi_face_landmarks[0]
+                    try:
+                        cues = extract_face_cues(face_landmarks, w, h, temporal)
+                    except Exception:
+                        logger.debug("Landmark cue extraction failed", exc_info=True)
+                        cues = None
+                    if cues is not None:
+                        cues.deepface = _deepface_probs
+                        label, conf, _dbg = classify_frame(cues, now, temporal)
+                        smoother.observe(now, label, conf, True)
+                else:
+                    missing = FaceCues(face_present=False)
+                    label, conf, _dbg = classify_frame(missing, now, temporal)
+                    smoother.observe(now, label, conf, False)
 
-                        ear = (calculate_ear(left_eye_landmarks, face_landmarks, w, h) +
-                               calculate_ear(right_eye_landmarks, face_landmarks, w, h)) / 2
-                        mar = calculate_mar(mouth_landmarks, face_landmarks, w, h)
-                        # Recalculate eye_y based on the current frame's landmarks
-                        eye_y = (face_landmarks.landmark[33].y + face_landmarks.landmark[263].y) / 2.0
-                        pitch = calculate_pitch(face_landmarks)
-
-                        # --- Emotion Detection Logic (Prioritized) ---
-
-                        # 1. Sleepy
-                        if ear < EAR_THRESHOLD_SLEEPY:
-                            if eyes_closed_start is None:
-                                eyes_closed_start = time.time()
-                            elif time.time() - eyes_closed_start > EYES_CLOSED_DURATION_SLEEPY:
-                                current_emotion = "Sleepy"
-                                # If sleepy, reset other counters
-                                yawn_start = None
-                                gaze_away_counter = 0
-                        else:
-                            eyes_closed_start = None  # Reset eyes closed timer
-
-                        # 2. Bored (Yawning or Gaze Away)
-                        if current_emotion != "Sleepy":  # Only check for bored if not already sleepy
-                            if mar > MAR_THRESHOLD_YAWN:  # and pitch < PITCH_NEUTRAL_RANGE[1]: Removed pitch constraint for yawning, focus on mouth
-                                if yawn_start is None:
-                                    yawn_start = time.time()
-                                elif time.time() - yawn_start > YAWN_DURATION_BORED:
-                                    current_emotion = "Bored"
-                                    eyes_closed_start = None  # Reset sleepy timer if bored by yawning
-                            else:
-                                yawn_start = None
-
-                            # Gaze Away for Boredom
-                            # Only if not already identified as sleepy or yawning
-                            if current_emotion not in ["Sleepy", "Bored"]:
-                                if abs(eye_y - calibrated_eye_y) > 0.07:  # Keeping original gaze deviation logic
-                                    gaze_away_counter += 1
-                                else:
-                                    gaze_away_counter = max(0, gaze_away_counter - 2)  # Decays faster
-
-                                if gaze_away_counter > GAZE_AWAY_THRESHOLD:
-                                    current_emotion = "Bored"
-                                    gaze_away_counter = 0  # Reset counter once bored is detected
-
-                        # 3. Confused (Head Tilt)
-                        if current_emotion not in ["Sleepy", "Bored"]:  # Check for confused if not sleepy or bored
-                            if is_head_tilted(face_landmarks):
-                                current_emotion = "Confused"
-                                eyes_closed_start = None
-                                yawn_start = None
-                                gaze_away_counter = 0
-
-                        # 4. DeepFace (async, latest frame) — MediaPipe face cues already won if set
-                        if current_emotion == "Unknown":
-                            df_emotion = _deepface_result
-                            if df_emotion != "Unknown":
-                                current_emotion = df_emotion
-
-                        if current_emotion == "Unknown":
-                            current_emotion = STATE["last_emotion"]
-
-                        # Ensure "Engaged" overrides boredom if the person comes back into focus and is neutral/happy
-                        # This rule is important for quick recovery from bored state
-                        if STATE["last_emotion"] == "Bored" and current_emotion in ["Engaged", "Confused", "Frustrated"]:
-                             # If they are no longer exhibiting bored characteristics, allow a quick switch
-                            if current_emotion != "Bored":  # The previous logic was "dom_emotion in ['happy', 'neutral']" which is too narrow.
-                                pass  # Let the determined current emotion stand
-
-                        # --- State Update and Smoothing ---
-                        STATE["emotion_history"].append(current_emotion)
-                        smoothed_emotion = get_majority_emotion(STATE["emotion_history"])
-
-                        with STATE["lock"]:
-                            if STATE["last_emotion"] != smoothed_emotion:
-                                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                                STATE["log_data"].append({"timestamp": timestamp, "emotion": smoothed_emotion, "source": "facial"})
-                            STATE["last_emotion"] = smoothed_emotion
-
-                else:  # No face detected
-                    eyes_closed_start = None
-                    yawn_start = None
-                    gaze_away_counter = 0
-
-                    if no_face_start is None:
-                        no_face_start = time.time()
-                    elif time.time() - no_face_start > NO_FACE_DURATION_BORED:
-                        # After NO_FACE_DURATION_BORED, set to Bored if still no face
-                        with STATE["lock"]:
-                            if STATE["last_emotion"] != "Bored":
-                                STATE["last_emotion"] = "Bored"
-                                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                                STATE["log_data"].append({"timestamp": timestamp, "emotion": "Bored", "source": "facial - no face (prolonged)"})
-                    else:
-                        # Immediately "Face Not Detected" if no face and not yet bored by duration
-                        current_emotion = "Face Not Detected"
-                        with STATE["lock"]:
-                             # Allow immediate update for Face Not Detected
-                            if STATE["last_emotion"] != "Face Not Detected":
-                                STATE["last_emotion"] = "Face Not Detected"
-                                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                                STATE["log_data"].append({"timestamp": timestamp, "emotion": "Face Not Detected", "source": "facial - no face (instant)"})
+                published = smoother.maybe_publish(now)
+                if published is not None:
+                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    with STATE["lock"]:
+                        changed = STATE["last_emotion"] != published
+                        STATE["last_emotion"] = published
+                        STATE["last_emotion_time"] = timestamp
+                        STATE["emotion_history"].append(published)
+                        if changed:
+                            STATE["log_data"].append(
+                                {"timestamp": timestamp, "emotion": published, "source": "facial"}
+                            )
             except Exception as e:
                 logger.error(f"Error in facial emotion loop frame processing: {str(e)}")
                 logger.debug(traceback.format_exc())
@@ -513,14 +494,14 @@ def start_facial_emotion_detection():
     """Start facial emotion detection in a daemon thread."""
     try:
         with STATE["lock"]:
-            if not STATE["running"]:
-                STATE["running"] = True
-                threading.Thread(target=facial_emotion_loop, daemon=True).start()
-                logger.info("Facial emotion detection started successfully.")
-                logger.info(f"DEBUG - STATE['running'] set to: {STATE['running']}")
-            else:
-                logger.info("Facial emotion detection is already running.")
-                logger.info(f"DEBUG - STATE['running'] already: {STATE['running']}")
+            if STATE["running"]:
+                logger.debug("Facial emotion detection is already running.")
+                return
+            STATE["running"] = True
+            STATE["last_emotion"] = "Unknown"
+            STATE["last_emotion_time"] = ""
+            threading.Thread(target=facial_emotion_loop, daemon=True).start()
+            logger.info("Facial emotion detection started successfully.")
     except Exception as e:
         logger.error(f"Failed to start facial detection: {str(e)}")
         logger.debug(traceback.format_exc())
@@ -560,19 +541,24 @@ def stop_facial_emotion_detection():
 
 def get_facial_emotion():
     """Retrieve the current smoothed facial emotion."""
+    rec = get_facial_emotion_record()
+    return rec["emotion"]
+
+
+def get_facial_emotion_record():
+    """Emotion plus last publish timestamp (used by API snapshots)."""
     try:
         with STATE["lock"]:
             if not STATE["running"]:
-                return "Unknown"
-            current_emotion = STATE["last_emotion"]
-            logger.debug(
-                "Facial running=%s emotion=%s", STATE["running"], current_emotion
-            )
-            return current_emotion
+                return {"emotion": "Unknown", "time": STATE.get("last_emotion_time") or ""}
+            return {
+                "emotion": STATE["last_emotion"],
+                "time": STATE.get("last_emotion_time") or "",
+            }
     except Exception as e:
         logger.error(f"Error getting facial emotion: {str(e)}")
         logger.debug(traceback.format_exc())
-        return "Unknown"
+        return {"emotion": "Unknown", "time": ""}
 
 # Example of how to run and stop for testing
 if __name__ == "__main__":

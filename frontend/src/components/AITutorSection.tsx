@@ -283,8 +283,8 @@ export const AITutorSection = ({ onClose }: AITutorSectionProps) => {
   ];
 
   return (
-    <div className="space-y-4" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-      <div className="flex items-center justify-between mb-4 sticky top-0 z-10 bg-white/95 backdrop-blur-md py-2">
+    <div className="space-y-4">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 py-3 backdrop-blur-md">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
             <BookOpen className="w-4 h-4 text-white" />
@@ -295,7 +295,7 @@ export const AITutorSection = ({ onClose }: AITutorSectionProps) => {
           variant="ghost"
           size="sm"
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-700"
+          className="text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
           Back
@@ -321,7 +321,7 @@ export const AITutorSection = ({ onClose }: AITutorSectionProps) => {
             )}
           </div>
 
-          <Card className="p-4 mb-4 bg-white/60 backdrop-blur-sm border-0 shadow-lg">
+          <Card className="mb-4 border-border/70 bg-card/80 p-4 shadow-sm backdrop-blur-sm">
             <div className="space-y-3">
               <div className="flex space-x-2">
                 <input
@@ -334,13 +334,13 @@ export const AITutorSection = ({ onClose }: AITutorSectionProps) => {
                       handleTopicSubmit(topic);
                     }
                   }}
-                  className="flex-1 p-2 border border-gray-200 rounded-lg focus:border-blue-400 focus:outline-none"
+                  className="flex-1 rounded-md border border-input bg-background p-2 text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
                   disabled={isLoading}
                 />
                 <Button
                   onClick={() => handleTopicSubmit(topic)}
                   disabled={isLoading || !topic.trim()}
-                  className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </Button>
@@ -364,16 +364,16 @@ export const AITutorSection = ({ onClose }: AITutorSectionProps) => {
           </Card>
 
           {isLoading && (
-            <Card className="p-6 text-center bg-white/60 backdrop-blur-sm border-0 shadow-lg">
+            <Card className="border-border/70 bg-card/80 p-6 text-center shadow-sm backdrop-blur-sm">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 text-indigo-500" />
               <p className="text-lg font-medium">🤖 AI is generating explanation for "{topic}"...</p>
-              <p className="text-sm text-gray-600 mt-1">This may take a few seconds</p>
+              <p className="mt-1 text-sm text-muted-foreground">This may take a few seconds</p>
             </Card>
           )}
 
           {error && (
-            <Card className="p-4 bg-red-50 border-red-200 border-0 shadow-lg">
-              <p className="text-red-600">{error}</p>
+            <Card className="border-destructive/30 bg-destructive/10 p-4 shadow-sm">
+              <p className="text-destructive">{error}</p>
               <Button 
                 onClick={() => {
                   setError('');
@@ -390,31 +390,31 @@ export const AITutorSection = ({ onClose }: AITutorSectionProps) => {
 
           {explanation && !isLoading && (
             <div className="space-y-4">
-              <Card className="p-4 bg-white/60 backdrop-blur-sm border-0 shadow-lg">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">{explanation.title}</h2>
+              <Card className="border-border/70 bg-card/80 p-4 shadow-sm backdrop-blur-sm">
+                <h2 className="mb-4 text-xl font-bold text-foreground">{explanation.title}</h2>
                 
                 <div className="space-y-4">
                   <section 
                     onClick={() => handleSectionClick('overview', explanation.overview)}
-                    className="cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                    className="cursor-pointer rounded-md border border-transparent p-3 transition-colors hover:border-border hover:bg-muted/60"
                   >
-                    <h3 className="flex items-center text-lg font-semibold text-gray-700 mb-2">
+                    <h3 className="mb-2 flex items-center text-lg font-semibold text-foreground">
                       <BookOpen className="w-5 h-5 mr-2 text-indigo-500" />
                       Overview
                     </h3>
-                    <p className="text-gray-600">{currentSection === 'overview' && isTyping ? typingText : explanation.overview}</p>
+                    <p className="text-muted-foreground">{currentSection === 'overview' && isTyping ? typingText : explanation.overview}</p>
                   </section>
 
                   {explanation.keyConcepts.length > 0 && (
                     <section 
                       onClick={() => handleSectionClick('keyConcepts', explanation.keyConcepts.join('. '))}
-                      className="cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                      className="cursor-pointer rounded-md border border-transparent p-3 transition-colors hover:border-border hover:bg-muted/60"
                     >
-                      <h3 className="flex items-center text-lg font-semibold text-gray-700 mb-2">
+                      <h3 className="mb-2 flex items-center text-lg font-semibold text-foreground">
                         <Users className="w-5 h-5 mr-2 text-indigo-500" />
                         Key Concepts
                       </h3>
-                      <ul className="list-disc list-inside text-gray-600 space-y-1">
+                      <ul className="list-inside list-disc space-y-1 text-muted-foreground">
                         {explanation.keyConcepts.map((concept, idx) => (
                           <li key={idx}>{concept}</li>
                         ))}
@@ -425,17 +425,17 @@ export const AITutorSection = ({ onClose }: AITutorSectionProps) => {
                   {explanation.examples.length > 0 && (
                     <section 
                       onClick={() => handleSectionClick('examples', explanation.examples.map(e => e.title + ' ' + e.code).join(' '))}
-                      className="cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                      className="cursor-pointer rounded-md border border-transparent p-3 transition-colors hover:border-border hover:bg-muted/60"
                     >
-                      <h3 className="flex items-center text-lg font-semibold text-gray-700 mb-2">
+                      <h3 className="mb-2 flex items-center text-lg font-semibold text-foreground">
                         <BookOpen className="w-5 h-5 mr-2 text-indigo-500" />
                         Examples
                       </h3>
                       <div className="space-y-3">
                         {explanation.examples.map((ex, idx) => (
-                          <div key={idx} className="bg-gray-100 p-3 rounded-lg">
-                            <strong className="text-gray-800">{ex.title}</strong>
-                            <pre className="mt-2 text-sm bg-gray-800 text-green-400 p-2 rounded overflow-x-auto">
+                          <div key={idx} className="rounded-md border border-border bg-muted/60 p-3">
+                            <strong className="text-foreground">{ex.title}</strong>
+                            <pre className="mt-2 overflow-x-auto rounded-md bg-foreground p-2 text-sm text-success">
                               {ex.code}
                             </pre>
                           </div>
@@ -447,13 +447,13 @@ export const AITutorSection = ({ onClose }: AITutorSectionProps) => {
                   {explanation.learningPath.length > 0 && (
                     <section 
                       onClick={() => handleSectionClick('learningPath', explanation.learningPath.join('. '))}
-                      className="cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                      className="cursor-pointer rounded-md border border-transparent p-3 transition-colors hover:border-border hover:bg-muted/60"
                     >
-                      <h3 className="flex items-center text-lg font-semibold text-gray-700 mb-2">
+                      <h3 className="mb-2 flex items-center text-lg font-semibold text-foreground">
                         <Target className="w-5 h-5 mr-2 text-indigo-500" />
                         Learning Path
                       </h3>
-                      <ol className="list-decimal list-inside text-gray-600 space-y-1">
+                      <ol className="list-inside list-decimal space-y-1 text-muted-foreground">
                         {explanation.learningPath.map((step, idx) => (
                           <li key={idx}>{step}</li>
                         ))}
@@ -466,34 +466,34 @@ export const AITutorSection = ({ onClose }: AITutorSectionProps) => {
           )}
 
           {!explanation && !isLoading && !error && (
-            <Card className="p-6 bg-white/60 backdrop-blur-sm border-0 shadow-lg">
+            <Card className="border-border/70 bg-card/80 p-6 shadow-sm backdrop-blur-sm">
               <div className="text-center space-y-4">
                 <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto">
                   <BookOpen className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800">Welcome to AI Tutor</h3>
-                <p className="text-gray-600">Enter any topic and get comprehensive explanations with voice narration</p>
+                <h3 className="text-xl font-semibold text-foreground">Welcome to AI Tutor</h3>
+                <p className="text-muted-foreground">Enter any topic and get comprehensive explanations with voice narration</p>
                 
                 <div className="grid grid-cols-1 gap-3 mt-6">
-                  <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center space-x-3 rounded-md border border-border bg-muted/50 p-3">
                     <Lightbulb className="w-5 h-5 text-indigo-500" />
                     <div className="text-left">
                       <h4 className="font-medium text-sm">Smart Explanations</h4>
-                      <p className="text-xs text-gray-600">Structured learning with overview, concepts, and examples</p>
+                      <p className="text-xs text-muted-foreground">Structured learning with overview, concepts, and examples</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center space-x-3 rounded-md border border-border bg-muted/50 p-3">
                     <Volume2 className="w-5 h-5 text-indigo-500" />
                     <div className="text-left">
                       <h4 className="font-medium text-sm">Voice Narration</h4>
-                      <p className="text-xs text-gray-600">Listen to explanations with AI voice</p>
+                      <p className="text-xs text-muted-foreground">Listen to explanations with AI voice</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center space-x-3 rounded-md border border-border bg-muted/50 p-3">
                     <Target className="w-5 h-5 text-indigo-500" />
                     <div className="text-left">
                       <h4 className="font-medium text-sm">Interactive Learning</h4>
-                      <p className="text-xs text-gray-600">Click sections to hear specific explanations</p>
+                      <p className="text-xs text-muted-foreground">Click sections to hear specific explanations</p>
                     </div>
                   </div>
                 </div>

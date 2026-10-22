@@ -26,13 +26,13 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Easy':
-        return 'text-green-600 bg-green-100';
+        return 'border-success/30 bg-success/10 text-success';
       case 'Medium':
-        return 'text-yellow-600 bg-yellow-100';
+        return 'border-warning/30 bg-warning/10 text-warning';
       case 'Hard':
-        return 'text-red-600 bg-red-100';
+        return 'border-destructive/30 bg-destructive/10 text-destructive';
       default:
-        return 'text-gray-600 bg-gray-100';
+        return 'border-border bg-muted text-muted-foreground';
     }
   };
 
@@ -142,7 +142,7 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
       <div className="space-y-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
               <Gamepad2 className="w-4 h-4 text-white" />
             </div>
             <h3 className="text-lg font-semibold">{selectedGame.title}</h3>
@@ -151,47 +151,47 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
             variant="ghost"
             size="sm"
             onClick={() => setSelectedGame(null)}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
             Back to Games
           </Button>
         </div>
 
-        <Card className="p-6 bg-gradient-to-br from-white to-gray-50 border-0">
+        <Card className="border-border/70 bg-card/80 p-6 shadow-sm">
           <div className="space-y-4">
             <div className="text-center">
               <div className="flex justify-center mb-3">
                 <span className="text-4xl">{getEmotionIcon(selectedGame.emotion)}</span>
               </div>
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">{selectedGame.title}</h4>
-              <p className="text-gray-600 mb-4">{selectedGame.description}</p>
+              <h4 className="mb-2 text-xl font-semibold text-foreground">{selectedGame.title}</h4>
+              <p className="mb-4 text-muted-foreground">{selectedGame.description}</p>
               
               <div className="flex justify-center space-x-4 mb-6">
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(selectedGame.difficulty)}`}>
                   {selectedGame.difficulty}
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                <span className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
                   {selectedGame.category}
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-600">
+                <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                   {selectedGame.emotion}
                 </span>
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+              <div className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 p-4">
                 <div className="flex items-center space-x-2">
-                  <AlertCircle className="w-5 h-5 text-red-500" />
-                  <p className="text-red-700 text-sm">{error}</p>
+                  <AlertCircle className="h-5 w-5 text-destructive" />
+                  <p className="text-sm text-destructive">{error}</p>
                 </div>
                 <div className="mt-3">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handlePlayGame(selectedGame)}
-                    className="text-red-600 border-red-300 hover:bg-red-50"
+                    className="border-destructive/30 text-destructive hover:bg-destructive/10"
                   >
                     <RefreshCw className="w-4 h-4 mr-2" />
                     Try Again
@@ -204,7 +204,7 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
               <Button
                 onClick={() => handlePlayGame(selectedGame)}
                 disabled={isLoading}
-                className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:opacity-50"
+                className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
               >
                 {isLoading ? (
                   <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
@@ -224,7 +224,7 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
             </div>
 
             <div className="text-center pt-4">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Make sure the backend server is running on port 8000
               </p>
             </div>
@@ -235,10 +235,10 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
   }
 
   return (
-    <div className="space-y-4" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-      <div className="flex items-center justify-between mb-4 sticky top-0 z-10 bg-white/95 backdrop-blur-md py-2">
+    <div className="space-y-4">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 py-3 backdrop-blur-md">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
             <Gamepad2 className="w-4 h-4 text-white" />
           </div>
           <h3 className="text-lg font-semibold">EmoLearn Games</h3>
@@ -247,7 +247,7 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
           variant="ghost"
           size="sm"
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-700"
+          className="text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
           Back to Assistant
@@ -265,7 +265,7 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
             className={`flex items-center space-x-2 ${
               selectedEmotion === emotion.id 
                 ? `bg-gradient-to-r ${emotion.color} text-white border-0` 
-                : 'hover:bg-gray-50'
+                : 'hover:bg-muted'
             }`}
           >
             <span className="text-lg">{emotion.icon}</span>
@@ -275,10 +275,10 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
       </div>
 
       {error && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+        <div className="mb-4 rounded-md border border-warning/30 bg-warning/10 p-4">
           <div className="flex items-center space-x-2">
-            <AlertCircle className="w-5 h-5 text-yellow-500" />
-            <p className="text-yellow-700 text-sm">
+            <AlertCircle className="h-5 w-5 text-warning" />
+            <p className="text-sm text-warning">
               {error}
             </p>
           </div>
@@ -290,7 +290,7 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
           <Card
             key={game.id}
             onClick={() => setSelectedGame(game)}
-            className="p-4 cursor-pointer hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50 border-0 transform hover:scale-[1.02]"
+            className="cursor-pointer border-border/70 bg-card/80 p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
           >
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -303,14 +303,14 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
               </div>
               
               <div className="text-left">
-                <h4 className="font-medium text-sm text-gray-800 mb-1">{game.title}</h4>
-                <p className="text-xs text-gray-600 mb-2 line-clamp-2">{game.description}</p>
+                <h4 className="mb-1 text-sm font-medium text-foreground">{game.title}</h4>
+                <p className="mb-2 line-clamp-2 text-xs text-muted-foreground">{game.description}</p>
                 
                 <div className="flex justify-between items-center">
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                  <span className="rounded-full border border-border bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
                     {game.category}
                   </span>
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-600">
+                  <span className="rounded-full border border-primary/25 bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
                     {game.emotion}
                   </span>
                 </div>
@@ -321,13 +321,13 @@ export const GamesSection = ({ onClose }: GamesSectionProps) => {
       </div>
 
       <div className="text-center pt-4">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-muted-foreground">
           Games designed for different emotional states to enhance learning experience
         </p>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="mt-1 text-xs text-muted-foreground/70">
           Total: {filteredGames.length} games • Filtered by: {selectedEmotion === 'all' ? 'All Emotions' : selectedEmotion}
         </p>
-        <p className="text-xs text-blue-500 mt-2">
+        <p className="mt-2 text-xs text-primary">
           💡 Tip: Make sure the backend server is running on port 8000
         </p>
       </div>

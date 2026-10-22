@@ -1,180 +1,164 @@
-import { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Play, Pause, Volume2, Maximize, Lock, Unlock, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Maximize, Unlock } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useSession } from "@/contexts/session-context";
+import { lessons } from "@/lib/lessons";
+import { cn } from "@/lib/utils";
 
 export const VideoPlayer = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [videoIndex, setVideoIndex] = useState(0);
+  const { lessonIndex, setLessonIndex, isFocusMode, setIsFocusMode, nextLesson, prevLesson, currentLesson } =
+    useSession();
   const videoRef = useRef<HTMLDivElement>(null);
-
-  // Curated DSA playlist (Abdul Bari, Gate Smashers)
-  const videos = [
-    {
-      id: "0IAPZzGSbME",
-      title: "",
-      chapter: "Introduction to Algorithms",
-    },
-    {
-      id: "9TlHvipP5yA",
-      title: "",
-      chapter: "Time Complexity (Part 1)",
-    },
-    {
-      id: "gBz44smaa9A",
-      title: "",
-      chapter: "Time Complexities of Searching & Sorting",
-    },
-  ];
+  const [unavailable, setUnavailable] = useState(false);
 
   const requestFullScreen = (element: HTMLElement) => {
-    if (element.requestFullscreen) {
-      element.requestFullscreen();
-    } else if ((element as any).webkitRequestFullscreen) {
-      (element as any).webkitRequestFullscreen();
-    } else if ((element as any).mozRequestFullScreen) {
-      (element as any).mozRequestFullScreen();
-    } else if ((element as any).msRequestFullscreen) {
-      (element as any).msRequestFullscreen();
+    if (element.requestFullscreen) element.requestFullscreen();
+    else if ((element as HTMLElement & { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen) {
+      (element as HTMLElement & { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
     }
   };
 
   const exitFullScreen = () => {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if ((document as any).webkitExitFullscreen) {
-      (document as any).webkitExitFullscreen();
-    } else if ((document as any).mozCancelFullScreen) {
-      (document as any).mozCancelFullScreen();
-    } else if ((document as any).msExitFullscreen) {
-      (document as any).msExitFullscreen();
+    if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+    else if ((document as Document & { webkitExitFullscreen?: () => void }).webkitExitFullscreen) {
+      (document as Document & { webkitExitFullscreen: () => void }).webkitExitFullscreen();
     }
   };
 
-  const toggleFullScreen = () => {
-    if (!isFullScreen) {
-      if (videoRef.current) {
-        requestFullScreen(videoRef.current);
-      }
-    } else {
-      exitFullScreen();
-    }
+  const enterFocus = () => {
+    setIsFocusMode(true);
+    if (videoRef.current) requestFullScreen(videoRef.current);
   };
 
-  const handleFullScreenChange = () => {
-    const isFS =
-      document.fullscreenElement === videoRef.current ||
-      (document as any).webkitFullscreenElement === videoRef.current ||
-      (document as any).mozFullScreenElement === videoRef.current ||
-      (document as any).msFullscreenElement === videoRef.current;
-
-    setIsFullScreen(!!isFS);
-  };
-
-  const nextVideo = () => {
-    if (isFullScreen) return;
-    setVideoIndex((videoIndex + 1) % videos.length);
-  };
-
-  const prevVideo = () => {
-    if (isFullScreen) return;
-    setVideoIndex((videoIndex - 1 + videos.length) % videos.length);
+  const exitFocus = () => {
+    setIsFocusMode(false);
+    exitFullScreen();
   };
 
   useEffect(() => {
+    const handleFullScreenChange = () => {
+      const isFS =
+        document.fullscreenElement === videoRef.current ||
+        (document as Document & { webkitFullscreenElement?: Element }).webkitFullscreenElement ===
+          videoRef.current;
+      setIsFocusMode(!!isFS);
+    };
+
     document.addEventListener("fullscreenchange", handleFullScreenChange);
     document.addEventListener("webkitfullscreenchange", handleFullScreenChange);
-    document.addEventListener("mozfullscreenchange", handleFullScreenChange);
-    document.addEventListener("MSFullscreenChange", handleFullScreenChange);
-
     return () => {
       document.removeEventListener("fullscreenchange", handleFullScreenChange);
       document.removeEventListener("webkitfullscreenchange", handleFullScreenChange);
-      document.removeEventListener("mozfullscreenchange", handleFullScreenChange);
-      document.removeEventListener("MSFullscreenChange", handleFullScreenChange);
     };
-  }, []);
+  }, [setIsFocusMode]);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isFocusMode) exitFocus();
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+      if (event.key === "ArrowRight") nextLesson();
+      if (event.key === "ArrowLeft") prevLesson();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isFocusMode, nextLesson, prevLesson]);
+
+  useEffect(() => {
+    setUnavailable(false);
+  }, [currentLesson.id]);
+
+  if (!currentLesson?.id) {
+    return (
+      <div className="surface rounded-lg p-8 text-center">
+        <p className="font-display text-lg font-semibold">Lesson unavailable</p>
+        <p className="mt-1 text-sm text-muted-foreground">This course has no playable lesson selected.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="relative group flex flex-col items-center">
+    <div className="space-y-4">
       <div
-        className={`bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl overflow-hidden shadow-2xl w-full ${isFullScreen ? 'fixed inset-0 z-50 rounded-none flex flex-col items-center justify-center' : ''}`}
         ref={videoRef}
+        className={cn(
+          "relative overflow-hidden rounded-lg border-2 border-foreground/20 bg-zinc-950",
+          isFocusMode && "fixed inset-0 z-50 rounded-none border-0"
+        )}
       >
-        {/* Video Info Overlay */}
-        <div className="absolute top-4 left-4 text-white z-30">
-          <h3 className="text-xl font-semibold">{videos[videoIndex].title}</h3>
-          <p className="text-blue-200">{videos[videoIndex].chapter}</p>
+        <div className="pointer-events-none absolute left-3 top-3 z-20 max-w-[70%] rounded-md border border-white/20 bg-black/65 px-3 py-2 text-white">
+          <p className="text-[11px] uppercase tracking-[0.14em] text-white/70">{currentLesson.course}</p>
+          <p className="font-display text-sm font-semibold sm:text-base">{currentLesson.title}</p>
         </div>
-        {/* YouTube iframe for actual video */}
-        <div className="aspect-video w-full relative">
-          <iframe
-            className="w-full h-full absolute inset-0"
-            src={`https://www.youtube.com/embed/${videos[videoIndex].id}?autoplay=1&controls=1&modestbranding=1&rel=0`}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            style={{ borderRadius: isFullScreen ? 0 : '1.5rem', background: 'black' }}
-          ></iframe>
-          {/* Overlay to block interaction only in focus mode */}
-          {isFullScreen && (
-            <div className="absolute inset-0 bg-black/40 z-40 cursor-not-allowed"></div>
+        <div className="absolute right-3 top-3 z-20 rounded-md border border-white/20 bg-black/65 px-2 py-1 text-xs text-white">
+          {isFocusMode ? "Focus mode" : "Lesson"} · {lessonIndex + 1}/{lessons.length}
+        </div>
+        <div className={cn("relative w-full", isFocusMode ? "h-full" : "aspect-video")}>
+          {unavailable ? (
+            <div className="flex h-full min-h-[240px] items-center justify-center bg-zinc-900 p-6 text-center text-sm text-zinc-200">
+              This lesson could not be loaded. Check your connection and try the next lesson.
+            </div>
+          ) : (
+            <iframe
+              className="absolute inset-0 h-full w-full"
+              src={`https://www.youtube.com/embed/${currentLesson.id}?rel=0&modestbranding=1`}
+              title={currentLesson.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              onError={() => setUnavailable(true)}
+            />
+          )}
+          {isFocusMode && (
+            <div className="absolute inset-x-0 bottom-4 z-30 flex justify-center">
+              <Button type="button" onClick={exitFocus}>
+                <Unlock className="h-4 w-4" />
+                Exit focus
+              </Button>
+            </div>
           )}
         </div>
-        {/* Live Status */}
-        <div className="absolute top-4 right-4 z-30">
-          <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-2">
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-            <span>LIVE</span>
-          </div>
-        </div>
       </div>
-      {/* Controls BELOW the video */}
-      <div className="flex flex-col items-center w-full mt-4">
-        {/* Video Navigation Dots */}
-        {!isFullScreen && (
-          <div className="flex space-x-2 mb-2">
-            {videos.map((_, index) => (
+
+      {!isFocusMode && (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2" role="tablist" aria-label="Lessons">
+            {lessons.map((lesson, index) => (
               <button
-                key={index}
-                onClick={() => setVideoIndex(index)}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === videoIndex ? 'bg-blue-400' : 'bg-white/30'
-                }`}
+                key={lesson.id}
+                type="button"
+                role="tab"
+                aria-selected={index === lessonIndex}
+                aria-label={lesson.title}
+                onClick={() => setLessonIndex(index)}
+                className={cn(
+                  "h-2.5 w-8 rounded-sm border-2 transition-colors",
+                  index === lessonIndex
+                    ? "border-foreground/30 bg-primary"
+                    : "border-foreground/15 bg-muted hover:bg-muted-foreground/30"
+                )}
               />
             ))}
           </div>
-        )}
-        <div className="flex gap-4 justify-center w-full">
-          <Button
-            onClick={prevVideo}
-            variant="secondary"
-            className="bg-blue-600 text-white hover:bg-blue-500"
-            disabled={isFullScreen}
-          >
-            <ChevronLeft className="w-4 h-4 mr-2" />
-            Previous
-          </Button>
-          <Button
-            onClick={nextVideo}
-            variant="secondary"
-            className="bg-blue-600 text-white hover:bg-blue-500"
-            disabled={isFullScreen}
-          >
-            Next
-            <ChevronRight className="w-4 h-4 ml-2" />
-          </Button>
-          <Button
-            onClick={toggleFullScreen}
-            className={`text-white ${isFullScreen ? 'bg-gray-700 hover:bg-gray-600' : 'bg-green-600 hover:bg-green-700'}`}
-          >
-            {isFullScreen ? <Unlock className="w-4 h-4 mr-2" /> : <Lock className="w-4 h-4 mr-2" />}
-            Focus Mode
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="outline" onClick={prevLesson} disabled={lessonIndex === 0}>
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={nextLesson}
+              disabled={lessonIndex === lessons.length - 1}
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button type="button" onClick={enterFocus}>
+              <Maximize className="h-4 w-4" />
+              Focus mode
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

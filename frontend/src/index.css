@@ -2,93 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 40 20% 96%;
+    --foreground: 232 18% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 232 18% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 232 18% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 244 86% 54%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 262 62% 96%;
+    --secondary-foreground: 262 50% 32%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 40 14% 92%;
+    --muted-foreground: 232 8% 38%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --success: 152 61% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 32 40% 12%;
+
+    --border: 232 12% 82%;
+    --input: 232 12% 82%;
+    --ring: 244 86% 54%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 40 24% 93%;
+    --sidebar-foreground: 232 18% 12%;
+    --sidebar-primary: 244 86% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 100%;
+    --sidebar-accent-foreground: 232 18% 12%;
+    --sidebar-border: 232 12% 78%;
+    --sidebar-ring: 244 86% 54%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --shadow-color: 232 18% 12%;
+    --surface-inset: 0 0% 100%;
+    --chart-grid: 232 12% 88%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 232 14% 8%;
+    --foreground: 40 16% 94%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 232 12% 12%;
+    --card-foreground: 40 16% 94%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 232 12% 12%;
+    --popover-foreground: 40 16% 94%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 244 92% 68%;
+    --primary-foreground: 232 18% 10%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 262 22% 16%;
+    --secondary-foreground: 262 80% 86%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 232 10% 16%;
+    --muted-foreground: 232 10% 68%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 262 72% 68%;
+    --accent-foreground: 232 18% 10%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --success: 152 55% 48%;
+    --success-foreground: 152 40% 8%;
+    --warning: 38 92% 56%;
+    --warning-foreground: 32 40% 10%;
+
+    --border: 232 10% 22%;
+    --input: 232 10% 22%;
+    --ring: 244 92% 68%;
+
+    --sidebar-background: 232 14% 7%;
+    --sidebar-foreground: 40 16% 94%;
+    --sidebar-primary: 244 92% 68%;
+    --sidebar-primary-foreground: 232 18% 10%;
+    --sidebar-accent: 232 12% 14%;
+    --sidebar-accent-foreground: 40 16% 94%;
+    --sidebar-border: 232 10% 20%;
+    --sidebar-ring: 244 92% 68%;
+
+    --shadow-color: 0 0% 0%;
+    --surface-inset: 232 12% 10%;
+    --chart-grid: 232 10% 20%;
   }
 }
 
@@ -97,12 +107,64 @@
     @apply border-border;
   }
 
+  html {
+    @apply scroll-smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: Syne, ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 }
 
-/* Custom animations */
+@layer components {
+  .surface {
+    @apply bg-card text-card-foreground border-2 border-foreground/15;
+    box-shadow:
+      4px 4px 0 0 hsl(var(--shadow-color) / 0.18),
+      inset 0 1px 0 hsl(0 0% 100% / 0.35);
+  }
+
+  .dark .surface {
+    box-shadow:
+      4px 4px 0 0 hsl(var(--shadow-color) / 0.55),
+      inset 0 1px 0 hsl(0 0% 100% / 0.04);
+  }
+
+  .surface-inset {
+    background: hsl(var(--surface-inset));
+    box-shadow:
+      inset 2px 2px 4px hsl(var(--shadow-color) / 0.08),
+      inset -1px -1px 3px hsl(0 0% 100% / 0.55);
+  }
+
+  .dark .surface-inset {
+    box-shadow:
+      inset 2px 2px 6px hsl(0 0% 0% / 0.45),
+      inset -1px -1px 2px hsl(0 0% 100% / 0.04);
+  }
+
+  .page-title {
+    @apply text-2xl sm:text-3xl font-bold tracking-tight;
+  }
+
+  .page-kicker {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground;
+  }
+}
+
 @keyframes slide-in {
   from {
     transform: translateX(100%);
@@ -116,4 +178,15 @@
 
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

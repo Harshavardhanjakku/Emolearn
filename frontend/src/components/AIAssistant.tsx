@@ -1,15 +1,28 @@
-import { useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Brain, Heart, HelpCircle, BookOpen, Send, XCircle, Youtube, Gamepad2, Loader2 } from 'lucide-react';
-import VoiceInput from './VoiceInput';
-import { askGroq } from '@/api/groqGPT';
-import { YouTubeSummarizer } from './YouTubeSummarizer';
-import { GamesSection } from './GamesSection';
-import { AITutorSection } from './AITutorSection';
-import './voice.css';
+import { useEffect, useRef, useState } from "react";
+import {
+  Bot,
+  Brain,
+  ChevronDown,
+  Gamepad2,
+  Lightbulb,
+  Loader2,
+  Maximize2,
+  MessageCircle,
+  Minimize2,
+  Send,
+  Sparkles,
+  X,
+  Youtube,
+} from "lucide-react";
+import { askGroq } from "@/api/groqGPT";
+import { useSession } from "@/contexts/session-context";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { AITutorSection } from "./AITutorSection";
+import { GamesSection } from "./GamesSection";
+import { YouTubeSummarizer } from "./YouTubeSummarizer";
+import VoiceInput from "./VoiceInput";
+import "./voice.css";
 
 interface AIAssistantProps {
   isOpen: boolean;
@@ -17,406 +30,254 @@ interface AIAssistantProps {
   currentEmotion: string;
   isEmotionTriggered?: boolean;
 }
+
 type ChatMessage = {
-  type: 'user' | 'ai';
+  type: "user" | "ai";
   text: string;
   timestamp: string;
 };
+
+type AssistantView = "chat" | "youtube" | "games" | "tutor";
+
+const suggestions = [
+  { label: "Explain a concept", prompt: "Explain this concept in simple terms with an example.", icon: Lightbulb },
+  { label: "Ask a coding question", prompt: "Help me understand this coding question: ", icon: Brain },
+  { label: "Generate a quiz", prompt: "Create a short quiz to test my understanding of ", icon: Sparkles },
+  { label: "Summarize a lesson", prompt: "Summarize this lesson: ", icon: Youtube },
+];
+
+const timeLabel = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+const formatMessageText = (text: string) => {
+  const escaped = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const formatted = escaped
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\n/g, "<br />");
+  return <span dangerouslySetInnerHTML={{ __html: formatted }} />;
+};
+
 export const AIAssistant = ({ isOpen, onClose, currentEmotion, isEmotionTriggered }: AIAssistantProps) => {
-  const [message, setMessage] = useState('');
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [showChat, setShowChat] = useState(false);
-  const [showYouTubeSummarizer, setShowYouTubeSummarizer] = useState(false);
-  const [showGamesSection, setShowGamesSection] = useState(false);
-  const [showAITutorSection, setShowAITutorSection] = useState(false);
+  const { handleManualAssistantToggle } = useSession();
+  const [message, setMessage] = useState("");
+  const [isMinimized, setIsMinimized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [view, setView] = useState<AssistantView>("chat");
   const [conversation, setConversation] = useState<ChatMessage[]>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
-  
-  // Reset internal state when assistant is closed or emotion trigger changes
+  const inputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
-    if (!isOpen) {
-      setShowConfirm(false);
-      setShowChat(false);
-      console.log("AI Assistant closed - resetting internal state");
+    if (isOpen) {
+      setIsMinimized(false);
+      setView("chat");
+      setError("");
+      inputRef.current?.focus();
     }
   }, [isOpen]);
 
   useEffect(() => {
-    console.log(`AI Assistant state: isOpen=${isOpen}, isEmotionTriggered=${isEmotionTriggered}, showChat=${showChat}, showConfirm=${showConfirm}`);
-    
-    if (currentEmotion && isOpen && !showChat && !showConfirm) {
-      if (isEmotionTriggered) {
-        // Emotion-triggered: show popup first
-        console.log("Showing emotion-triggered popup");
-        setShowConfirm(true);
-      } else {
-        // Manual-triggered: open chat directly
-        console.log("Opening manual-triggered chat");
-        setShowChat(true);
-      }
-      
-      // Setup initial AI message for when chat is opened
+    if (isOpen && conversation.length === 0) {
       setConversation([
         {
-          type: 'ai',
-          text: getEmotionResponse(currentEmotion),
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
+          type: "ai",
+          text: isEmotionTriggered
+            ? `I noticed your current mood is ${currentEmotion}. I’m here to help you learn at your pace. What would you like to work through?`
+            : "Hi! I’m your AI learning companion. Ask me to explain a concept, help with code, make a quiz, or summarize a lesson.",
+          timestamp: timeLabel(),
+        },
       ]);
     }
-  }, [currentEmotion, isOpen, showChat, showConfirm, isEmotionTriggered]);
+  }, [conversation.length, currentEmotion, isEmotionTriggered, isOpen]);
 
-  // Auto-scroll to bottom
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [conversation]);
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [conversation, isLoading]);
 
-  // Auto-close popup after 10 seconds
-  useEffect(() => {
-    if (showConfirm) {
-      const timer = setTimeout(() => setShowConfirm(false), 10000);
-      return () => clearTimeout(timer);
-    }
-  }, [showConfirm]);
-
-  function getEmotionResponse(emotion: string) {
-    switch (emotion) {
-      case '🤔':
-        return "I noticed you seem confused. Would you like me to explain this concept differently or provide additional examples?";
-      case '😫':
-        return "You seem frustrated. Let's take a step back. Would you like a quick breathing exercise or shall I break this down into smaller parts?";
-      case '💤':
-        return "Feeling a bit drowsy? Let's energize your learning! How about a quick interactive quiz or a short break?";
-      case '😐':
-        return "I can see you might be losing interest. Let's make this more engaging! Want to try a hands-on simulation?";
-      case '❓':
-        return "I'm here to help optimize your learning experience. How can I assist you today?";
-      default:
-        return "Hi! I'm here to help optimize your learning experience. How can I assist you today?";
-    }
-  }
-
-  const getConfirmMessage = (emotion: string) => {
-    switch (emotion) {
-      case '🤔':
-        return 'You seem confused. Want to open AI Assistant?';
-      case '😫':
-        return 'You seem frustrated. Want to open AI Assistant?';
-      case '💤':
-        return 'Feeling sleepy? Need a quick quiz or break?';
-      case '😐':
-        return 'Losing interest? Want something more engaging?';
-      case '❓':
-        return 'Need help? Want to chat with AI Assistant?';
-      default:
-        return 'Want to chat with the AI Assistant?';
-    }
+  const addAssistantMessage = (text: string) => {
+    setConversation((previous) => [...previous, { type: "ai", text, timestamp: timeLabel() }]);
   };
 
-  const formatMessageText = (text: string) => {
-    let html = text.replace(/&/g, '&amp;')
-                   .replace(/</g, '&lt;')
-                   .replace(/>/g, '&gt;');
+  const sendPrompt = async (prompt: string, mode = "simple") => {
+    const trimmed = prompt.trim();
+    if (!trimmed || isLoading) return;
 
-    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/(^|[^*])\*(?!\*)([^*]+)\*(?!\*)/g, '$1<em>$2</em>');
-    html = html.replace(/(^|[^_])_([^_]+)_/g, '$1<em>$2</em>');
-    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-    html = html.replace(/^###### (.*)$/gm, '<h6>$1</h6>');
-    html = html.replace(/^##### (.*)$/gm, '<h5>$1</h5>');
-    html = html.replace(/^#### (.*)$/gm, '<h4>$1</h4>');
-    html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
-    html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
-    html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
-
-    html = html.replace(/\n{2,}/g, '</p><p>');
-    html = html.replace(/\n/g, '<br/>');
-    return `<p>${html}</p>`;
-  };
-
-  const handleSendMessage = async () => {
-    const trimmed = message.trim();
-    if (!trimmed) return;
-
-    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    setConversation(prev => [
-      ...prev,
-      { type: 'user', text: trimmed, timestamp }
-    ]);
-    setMessage('');
-
-    // Auto-detect YouTube URLs and use appropriate mode
-    let mode = 'simple';
-    if (trimmed.includes('youtube.com') || trimmed.includes('youtu.be')) {
-      mode = 'youtube';
-    }
-
-    const startTime = performance.now();
-    console.log('[AIAssistant] handleSendMessage start', { input: trimmed, detectedMode: mode, time: new Date().toISOString() });
-    try {
-      const aiText = await askGroq(trimmed, mode);
-      const durationMs = Math.round(performance.now() - startTime);
-      console.log('[AIAssistant] handleSendMessage success', { mode, responsePreview: aiText?.slice(0, 120), responseLength: aiText?.length, durationMs });
-      setConversation(prev => [
-        ...prev,
-        { type: 'ai', text: aiText, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
-      ]);
-    } catch (err) {
-      const durationMs = Math.round(performance.now() - startTime);
-      console.error('[AIAssistant] handleSendMessage error', { mode, durationMs, error: err instanceof Error ? { name: err.name, message: err.message, stack: err.stack } : err });
-      setConversation(prev => [
-        ...prev,
-        { type: 'ai', text: 'Sorry, something went wrong while generating the response.', timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
-      ]);
-    }
-  };
-
-  const interventionOptions = [
-    { icon: Brain, title: 'Explain Differently', description: 'Im 5 mode', color: 'from-blue-400 to-blue-600', mode: 'im5' },
-    { icon: Heart, title: 'Story Mode', description: 'Concepts as stories', color: 'from-pink-400 to-pink-600', mode: 'story' },
-    { icon: HelpCircle, title: 'Quick Quiz', description: 'Test your understanding', color: 'from-green-400 to-green-600', mode: 'quiz' },
-    { icon: BookOpen, title: 'Study Resources', description: 'Additional materials', color: 'from-purple-400 to-purple-600', mode: 'resources' },
-    { icon: Youtube, title: 'Summarize the Class', description: 'Summarize YouTube videos', color: 'from-red-400 to-red-600', mode: 'youtube' },
-    { icon: Gamepad2, title: 'Games', description: 'Play interactive games', color: 'from-orange-400 to-orange-600', mode: 'games' },
-    { icon: BookOpen, title: 'AI Tutor', description: 'Learn any topic with AI', color: 'from-indigo-500 to-purple-600', mode: 'aitutor' }
-  ];
-
-  const handleIntervention = async (mode: string) => {
+    setError("");
+    setConversation((previous) => [...previous, { type: "user", text: trimmed, timestamp: timeLabel() }]);
+    setMessage("");
     setIsLoading(true);
-    
-    if (mode === 'youtube') {
-      setShowYouTubeSummarizer(true);
-      setIsLoading(false);
-      return;
-    }
-    
-    if (mode === 'games') {
-      setShowGamesSection(true);
-      setIsLoading(false);
-      return;
-    }
-    
-    if (mode === 'aitutor') {
-      setShowAITutorSection(true);
-      setIsLoading(false);
-      return;
-    }
-    
-    let prompt = message.trim();
-    
-    if (!prompt) {
-      prompt = 'Explain this concept in a different way.';
-    }
-    
-    const startTime = performance.now();
-    console.log('[AIAssistant] handleIntervention start', { mode, promptPreview: prompt.slice(0, 120), time: new Date().toISOString() });
+
     try {
-      const aiText = await askGroq(prompt, mode);
-      const durationMs = Math.round(performance.now() - startTime);
-      console.log('[AIAssistant] handleIntervention success', { mode, responsePreview: aiText?.slice(0, 120), responseLength: aiText?.length, durationMs });
-      setConversation(prev => [
-        ...prev,
-        {
-          type: 'ai',
-          text: aiText,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
-    } catch (err) {
-      const durationMs = Math.round(performance.now() - startTime);
-      console.error('[AIAssistant] handleIntervention error', { mode, durationMs, error: err instanceof Error ? { name: err.name, message: err.message, stack: err.stack } : err });
-      setConversation(prev => [
-        ...prev,
-        {
-          type: 'ai',
-          text: 'Sorry, something went wrong while generating the response.',
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
+      const detectedMode =
+        trimmed.includes("youtube.com") || trimmed.includes("youtu.be") ? "youtube" : mode;
+      const response = await askGroq(trimmed, detectedMode);
+      if (!response?.trim()) throw new Error("The assistant returned an empty response.");
+      addAssistantMessage(response);
+    } catch (requestError) {
+      console.error("[AIAssistant] request failed", requestError);
+      setError("I couldn’t complete that request. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
-  const handleYouTubeSummaryComplete = (summary: string) => {
-    setShowYouTubeSummarizer(false);
-    setConversation(prev => [
-      ...prev,
-      {
-        type: 'ai',
-        text: summary,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-    ]);
+  const handleSuggestion = (prompt: string) => {
+    setMessage(prompt);
+    inputRef.current?.focus();
   };
 
-  const handleGamesSectionClose = () => {
-    setShowGamesSection(false);
+  const handleVoiceResult = (text: string) => {
+    setMessage(text);
+    void sendPrompt(text);
   };
 
-  const handleAITutorSectionClose = () => {
-    setShowAITutorSection(false);
+  const renderToolView = () => {
+    if (view === "youtube") {
+      return (
+        <YouTubeSummarizer
+          onSummaryComplete={(summary) => {
+            setView("chat");
+            addAssistantMessage(summary);
+          }}
+          onClose={() => setView("chat")}
+        />
+      );
+    }
+    if (view === "games") return <GamesSection onClose={() => setView("chat")} />;
+    if (view === "tutor") return <AITutorSection onClose={() => setView("chat")} />;
+    return null;
   };
 
   return (
     <>
-      {showConfirm && (
-        <div className="fixed bottom-4 right-4 z-50 animate-slide-in">
-          <div className="bg-white max-w-sm w-full rounded-xl shadow-lg border px-5 py-4 flex flex-col space-y-3 relative">
-            <button
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-              onClick={() => { setShowConfirm(false); onClose(); }}
-              aria-label="Close popup"
-            >
-              <XCircle className="w-4 h-4" />
-            </button>
-            <div className="flex items-center space-x-3">
-              <Brain className="w-5 h-5 text-blue-500" />
-              <span className="font-semibold text-gray-800">{getConfirmMessage(currentEmotion)}</span>
+      <button
+        type="button"
+        onClick={handleManualAssistantToggle}
+        aria-label={isOpen ? "Close AI learning assistant" : "Open AI learning assistant"}
+        aria-expanded={isOpen}
+        className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary/30 bg-primary text-primary-foreground shadow-[0_10px_30px_hsl(var(--primary)/0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-[0_14px_36px_hsl(var(--primary)/0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:bottom-6 sm:right-6"
+      >
+        {isOpen ? <ChevronDown className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        {!isOpen && isEmotionTriggered && (
+          <span className="absolute right-0 top-0 h-3.5 w-3.5 rounded-full border-2 border-background bg-destructive" aria-label="New AI suggestion" />
+        )}
+      </button>
+
+      <section
+        aria-label="AI learning assistant"
+        aria-hidden={!isOpen}
+        className={`fixed bottom-24 right-4 z-40 w-[calc(100vw-2rem)] max-w-[27rem] origin-bottom-right overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-2xl transition-all duration-300 sm:right-6 ${
+          isOpen ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-95 opacity-0"
+        }`}
+      >
+        <header className="flex items-center justify-between border-b border-border bg-muted/40 px-4 py-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-md">
+              <Bot className="h-5 w-5" />
+              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-card bg-success" />
             </div>
-            <div className="flex justify-end space-x-2">
-              <Button variant="ghost" size="sm" onClick={() => { setShowConfirm(false); onClose(); }}>
-                Cancel
-              </Button>
-              <Button size="sm" onClick={() => { setShowConfirm(false); setShowChat(true); }}>
-                Yes, Open
-              </Button>
+            <div className="min-w-0">
+              <h2 className="truncate font-display text-sm font-bold">EmoLearn AI</h2>
+              <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                <span className="h-1.5 w-1.5 rounded-full bg-success" /> Online · Learning companion
+              </p>
             </div>
           </div>
-        </div>
-      )}
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsMinimized(true)} aria-label="Minimize AI assistant">
+              <Minimize2 className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose} aria-label="Close AI assistant">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </header>
 
-      {showChat && (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent 
-            className={`${showYouTubeSummarizer || showGamesSection || showAITutorSection ? 'max-w-2xl' : 'max-w-lg'} bg-white/95 backdrop-blur-md border-0 shadow-2xl`}
-            style={{ maxHeight: '80vh', overflowY: 'auto' }}
-          >
-            <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md pb-2">
-              <DialogHeader>
-                <DialogTitle className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                      <Brain className="w-4 h-4 text-white" />
+        {isMinimized ? (
+          <button type="button" className="flex w-full items-center gap-2 p-4 text-left text-sm hover:bg-muted" onClick={() => setIsMinimized(false)}>
+            <Maximize2 className="h-4 w-4" /> Restore conversation
+          </button>
+        ) : (
+          <>
+            {view !== "chat" ? (
+              <div className="max-h-[32rem] overflow-y-auto p-4">{renderToolView()}</div>
+            ) : (
+              <>
+                <div className="flex max-h-80 min-h-56 flex-col gap-3 overflow-y-auto p-4" role="log" aria-live="polite">
+                  {conversation.length === 0 && (
+                    <div className="m-auto max-w-xs text-center">
+                      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                        <Sparkles className="h-6 w-6" />
+                      </div>
+                      <h3 className="font-display font-bold">What are you learning today?</h3>
+                      <p className="mt-1 text-xs text-muted-foreground">I can explain concepts, help with code, create quizzes, and summarize lessons.</p>
                     </div>
-                    <span>AI Learning Assistant</span>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={onClose} className="text-gray-500 hover:text-gray-700">
-                    <XCircle className="w-4 h-4" />
+                  )}
+                  {conversation.map((item, index) => (
+                    <div key={`${item.timestamp}-${index}`} className={`flex ${item.type === "user" ? "justify-end" : "justify-start"}`}>
+                      <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm ${item.type === "user" ? "rounded-br-sm bg-primary text-primary-foreground" : "rounded-bl-sm bg-muted text-foreground"}`}>
+                        {item.type === "ai" && <Bot className="mb-1 inline-block h-3.5 w-3.5 text-primary" aria-hidden />}
+                        <span className="ml-1">{formatMessageText(item.text)}</span>
+                        <p className="mt-1 text-right text-[10px] opacity-60">{item.timestamp}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {isLoading && (
+                    <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-muted px-4 py-3 text-muted-foreground" aria-label="AI is typing">
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.2s]" />
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.1s]" />
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current" />
+                    </div>
+                  )}
+                  <div ref={chatEndRef} />
+                </div>
+
+                {error && <p className="px-4 pb-2 text-xs text-destructive" role="alert">{error}</p>}
+
+                <div className="flex gap-2 overflow-x-auto border-t border-border px-4 py-3">
+                  {suggestions.map((suggestion) => {
+                    const Icon = suggestion.icon;
+                    return (
+                      <button key={suggestion.label} type="button" onClick={() => handleSuggestion(suggestion.prompt)} className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground">
+                        <Icon className="h-3 w-3 text-primary" /> {suggestion.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center gap-2 border-t border-border bg-muted/20 p-3">
+                  <Input
+                    ref={inputRef}
+                    value={message}
+                    onChange={(event) => setMessage(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" && !event.shiftKey) {
+                        event.preventDefault();
+                        void sendPrompt(message);
+                      }
+                      if (event.key === "Escape") onClose();
+                    }}
+                    placeholder="Ask a learning question..."
+                    aria-label="Message for AI assistant"
+                    disabled={isLoading}
+                    className="h-10 rounded-xl bg-background"
+                  />
+                  <VoiceInput onResult={handleVoiceResult} />
+                  <Button type="button" size="icon" className="h-10 w-10 shrink-0 rounded-xl" onClick={() => void sendPrompt(message)} disabled={isLoading || !message.trim()} aria-label="Send message">
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                   </Button>
-                </DialogTitle>
-              </DialogHeader>
-            </div>
-            <div className="space-y-4">
-              {showYouTubeSummarizer ? (
-                <div className="animate-in fade-in duration-300">
-                  <YouTubeSummarizer
-                    onSummaryComplete={handleYouTubeSummaryComplete}
-                    onClose={() => setShowYouTubeSummarizer(false)}
-                  />
                 </div>
-              ) : showGamesSection ? (
-                <div className="animate-in fade-in duration-300">
-                  <GamesSection
-                    onClose={handleGamesSectionClose}
-                  />
+                <div className="flex items-center justify-center gap-3 border-t border-border px-3 py-2">
+                  <button type="button" onClick={() => setView("tutor")} className="text-[11px] text-muted-foreground hover:text-foreground">AI Tutor</button>
+                  <button type="button" onClick={() => setView("games")} className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"><Gamepad2 className="h-3 w-3" /> Games</button>
+                  <button type="button" onClick={() => setView("youtube")} className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"><Youtube className="h-3 w-3" /> Summarize video</button>
                 </div>
-              ) : showAITutorSection ? (
-                <div className="animate-in fade-in duration-300">
-                  <AITutorSection onClose={handleAITutorSectionClose} />
-                </div>
-              ) : (
-                <div className="animate-in fade-in duration-300">
-                  <>
-                    <div className="grid grid-cols-2 gap-3">
-                      {interventionOptions.map((option) => (
-                        <Card
-                          key={option.title}
-                          onClick={() => !isLoading && handleIntervention(option.mode)}
-                          className={`p-3 cursor-pointer hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50 border-0 transform hover:scale-[1.02] ${
-                            isLoading ? 'opacity-50 cursor-not-allowed' : ''
-                          }`}
-                        >
-                          <div className="flex flex-col items-center text-center space-y-2">
-                            <div className={`w-10 h-10 bg-gradient-to-r ${option.color} rounded-full flex items-center justify-center shadow-md`}>
-                              {isLoading ? (
-                                <Loader2 className="w-5 h-5 text-white animate-spin" />
-                              ) : (
-                                <option.icon className="w-5 h-5 text-white" />
-                              )}
-                            </div>
-                            <div>
-                              <h4 className="font-medium text-sm">{option.title}</h4>
-                              <p className="text-xs text-gray-600">{option.description}</p>
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                    <div className="space-y-3">
-                      <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-4 h-48 overflow-y-auto space-y-3">
-                        {conversation.map((msg, index) => (
-                          <div
-                            key={`${msg.type}-${msg.timestamp}-${index}`}
-                            className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                          >
-                            <div
-                              className={`max-w-[75%] p-3 rounded-2xl break-words whitespace-pre-wrap ${
-                                msg.type === 'user'
-                                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-br-none'
-                                  : 'bg-gray-100 text-black rounded-bl-none'
-                              }`}
-                            >
-                              <div
-                                className="text-sm"
-                                dangerouslySetInnerHTML={{ __html: formatMessageText(msg.text) }}
-                              />
-                              <p className="text-xs mt-1 text-right opacity-70">
-                                {msg.timestamp}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                        <div ref={chatEndRef} />
-                      </div>
-                      <div className="flex space-x-2 items-center">
-                        <Input
-                          placeholder="Ask me anything or paste a YouTube URL..."
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                              e.preventDefault();
-                              handleSendMessage();
-                            }
-                          }}
-                          className="border-gray-200 focus:border-blue-400"
-                        />
-                        <VoiceInput
-                          onResult={(text: string) => {
-                            setMessage(text);
-                            handleSendMessage();
-                          }}
-                        />
-                        <Button
-                          onClick={handleSendMessage}
-                          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                          aria-label="Send"
-                        >
-                          <Send className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </>
-                </div>
-              )}
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+              </>
+            )}
+          </>
+        )}
+      </section>
     </>
   );
 };

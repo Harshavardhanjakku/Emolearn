@@ -61,7 +61,24 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
 				}
+			},
+			boxShadow: {
+				brutal: '4px 4px 0 0 hsl(var(--shadow-color) / 0.22)',
+				'brutal-sm': '2px 2px 0 0 hsl(var(--shadow-color) / 0.2)',
+				neu: 'inset 1px 1px 2px hsl(0 0% 100% / 0.5), 3px 3px 0 0 hsl(var(--shadow-color) / 0.12)'
+			},
+			fontFamily: {
+				display: ['Syne', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+				sans: ['IBM Plex Sans', 'ui-sans-serif', 'system-ui', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

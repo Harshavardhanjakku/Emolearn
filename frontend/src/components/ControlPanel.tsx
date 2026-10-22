@@ -1,5 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-
+import {
+  BookOpen,
+  Camera,
+  CameraOff,
+  Coffee,
+  MessageCircle,
+  Mic,
+  MicOff,
+  RefreshCw,
+  ShieldAlert,
+  Timer,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -9,344 +19,178 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useSession } from "@/contexts/session-context";
+import { cn } from "@/lib/utils";
+import "./voice.css";
 
-import {
-  Camera,
-  CameraOff,
-  Mic,
-  MicOff,
-  Coffee,
-  MessageCircle,
-  BookOpen,
-  Timer,
-} from "lucide-react";
+const ControlButton = ({
+  active,
+  label,
+  onClick,
+  children,
+}: {
+  active?: boolean;
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) => (
+  <Button
+    type="button"
+    variant={active ? "default" : "outline"}
+    className="h-auto min-h-16 flex-col gap-1 py-3"
+    aria-pressed={!!active}
+    onClick={onClick}
+  >
+    {children}
+    <span className="text-xs">{label}</span>
+  </Button>
+);
 
-import "./voice.css"; // Optional styling for voice UI
+export const ControlPanel = ({ compact = false }: { compact?: boolean }) => {
+  const {
+    isCameraOn,
+    isMicOn,
+    isFocusMode,
+    isDnd,
+    currentEmotion,
+    detectionStatus,
+    detectionSource,
+    cameras,
+    selectedCamera,
+    handleCameraToggle,
+    handleMicToggle,
+    handleCameraSelect,
+    handleManualAssistantToggle,
+    loadCameras,
+    setIsBreathingOpen,
+    setIsFocusMode,
+    setIsDnd,
+    setIsQuizOpen,
+  } = useSession();
 
-interface ControlPanelProps {
-  isCameraOn: boolean;
-  setIsCameraOn: (value: boolean) => void;
-  isMicOn: boolean;
-  setIsMicOn: (value: boolean) => void;
-  onBreathingExercise: () => void;
-  onAssistantToggle: () => void;
-  onEmotionChange: (emotion: string) => void; // New prop to pass emotion to parent
-}
-
-export const ControlPanel = ({
-  isCameraOn,
-  setIsCameraOn,
-  isMicOn,
-  setIsMicOn,
-  onBreathingExercise,
-  onAssistantToggle,
-  onEmotionChange,
-}: ControlPanelProps) => {
-  const [showVoiceInput, setShowVoiceInput] = useState(false);
-  const [showAssistant, setShowAssistant] = useState(false);
-  const [emotion, setEmotion] = useState<string | null>(null);
-  const [cameras, setCameras] = useState<{ index: number; name: string; available?: boolean }[]>([]);
-  const [selectedCamera, setSelectedCamera] = useState<string>("0");
-  /** Ref avoids stale closures in the polling interval (useEffect deps are only sensors). */
-  const lastEmotionRef = useRef<string | null>(null);
-  const onEmotionChangeRef = useRef(onEmotionChange);
-  onEmotionChangeRef.current = onEmotionChange;
-
-  // Function to notify backend about sensor state changes
-  const notifyBackendSensorChange = async (sensorType: 'camera' | 'microphone', enabled: boolean) => {
-    try {
-      const endpoint = sensorType === 'camera' ? '/api/sensors/camera' : '/api/sensors/microphone';
-      const response = await fetch(`http://localhost:8000${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ enabled }),
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log(`Backend ${sensorType} state updated:`, data);
-      }
-    } catch (error) {
-      console.error(`Failed to notify backend about ${sensorType} state:`, error);
-    }
-  };
-
-  const handleMicToggle = () => {
-    const newMicState = !isMicOn;
-    setIsMicOn(newMicState);
-    setShowVoiceInput(newMicState);
-    
-    // Notify backend about microphone state change
-    notifyBackendSensorChange('microphone', newMicState);
-  };
-
-  const handleCameraToggle = () => {
-    const newCameraState = !isCameraOn;
-    
-    // Don't access camera directly from frontend - let backend handle it
-    setIsCameraOn(newCameraState);
-    
-    // Notify backend about camera state change
-    notifyBackendSensorChange('camera', newCameraState);
-  };
-
-  const loadCameras = async () => {
-    try {
-      const res = await fetch("http://localhost:8000/api/sensors/cameras");
-      if (!res.ok) return;
-      const data = await res.json();
-      const list = Array.isArray(data.cameras) ? data.cameras : [];
-      setCameras(list);
-      const selected = data.selected_index ?? list.find((c: { selected?: boolean }) => c.selected)?.index ?? 0;
-      setSelectedCamera(String(selected));
-    } catch (error) {
-      console.error("Failed to list cameras:", error);
-    }
-  };
-
-  const handleCameraSelect = async (value: string) => {
-    setSelectedCamera(value);
-    setIsCameraOn(true);
-    try {
-      await fetch("http://localhost:8000/api/sensors/camera/select", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ index: Number(value) }),
-      });
-      await loadCameras();
-    } catch (error) {
-      console.error("Failed to select camera:", error);
-    }
-  };
-
-  // Turn camera on by default and load device list
-  useEffect(() => {
-    setIsCameraOn(true);
-    notifyBackendSensorChange("camera", true);
-    loadCameras();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleVoiceResult = (text: string) => {
-    console.log("Recognized speech:", text);
-  };
-
-  const handleAssistantClick = () => {
-    setShowAssistant((prev) => !prev);
-    onAssistantToggle();
-  };
-
-  // Poll emotion from backend based on current state
-  useEffect(() => {
-    if (!isCameraOn && !isMicOn) {
-      lastEmotionRef.current = null;
-      setEmotion(null);
-      console.log("No sensors enabled, skipping emotion polling");
-      return;
-    }
-
-    const tick = async () => {
-      const endpoint = "/api/emotion/combined";
-      try {
-        const res = await fetch(`http://localhost:8000${endpoint}`);
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const data = await res.json();
-        const detectedEmotion = data.emotion || "Unknown";
-        if (detectedEmotion !== lastEmotionRef.current) {
-          lastEmotionRef.current = detectedEmotion;
-          setEmotion(detectedEmotion);
-          onEmotionChangeRef.current(detectedEmotion);
-        }
-      } catch (error) {
-        console.error("Emotion poll failed:", error);
-        try {
-          const jsonRes = await fetch("http://localhost:8000/api/emotion/latest");
-          if (jsonRes.ok) {
-            const jsonData = await jsonRes.json();
-            const fallbackEmotion = jsonData.final_emotion || "Unknown";
-            if (fallbackEmotion !== lastEmotionRef.current) {
-              lastEmotionRef.current = fallbackEmotion;
-              setEmotion(fallbackEmotion);
-              onEmotionChangeRef.current(fallbackEmotion);
-            }
-          }
-        } catch {
-          const unknown = "Unknown";
-          if (unknown !== lastEmotionRef.current) {
-            lastEmotionRef.current = unknown;
-            setEmotion(unknown);
-            onEmotionChangeRef.current(unknown);
-          }
-        }
-      }
-    };
-
-    tick();
-    const interval = setInterval(tick, 2000);
-    return () => clearInterval(interval);
-  }, [isCameraOn, isMicOn]);
-
-  // Function to check backend status
-  const checkBackendStatus = async () => {
-    try {
-      const res = await fetch('http://localhost:8000/api/sensors/status');
-      if (res.ok) {
-        const status = await res.json();
-        console.log('Backend status:', status);
-        return status;
-      }
-    } catch (error) {
-      console.error('Failed to check backend status:', error);
-    }
-    return null;
-  };
-
-  // Check backend status when sensors are toggled
-  useEffect(() => {
-    if (isCameraOn || isMicOn) {
-      checkBackendStatus();
-    }
-  }, [isCameraOn, isMicOn]);
+  const selectedName = cameras.find((c) => String(c.index) === selectedCamera)?.name;
+  const selectedUnavailable = cameras.find((c) => String(c.index) === selectedCamera)?.available === false;
 
   return (
-    <Card className="p-6 bg-white/60 backdrop-blur-sm border-0 shadow-lg">
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-800">Learning Controls</h3>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* Camera Toggle */}
-          <Button
-            variant={isCameraOn ? "default" : "outline"}
-            className={`flex flex-col items-center space-y-2 h-20 ${
-              isCameraOn
-                ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                : "border-2 border-gray-200 hover:border-blue-300"
-            }`}
-            onClick={handleCameraToggle}
-          >
-            {isCameraOn ? <Camera className="w-5 h-5" /> : <CameraOff className="w-5 h-5" />}
-            <span className="text-xs">Camera</span>
-          </Button>
-
-          {/* Mic Toggle */}
-          <Button
-            variant={isMicOn ? "default" : "outline"}
-            className={`flex flex-col items-center space-y-2 h-20 ${
-              isMicOn
-                ? "bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700"
-                : "border-2 border-gray-200 hover:border-green-300"
-            }`}
-            onClick={handleMicToggle}
-          >
-            {isMicOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
-            <span className="text-xs">Microphone</span>
-          </Button>
-
-          {/* Break Timer */}
-          <Button
-            variant="outline"
-            className="flex flex-col items-center space-y-2 h-20 border-2 border-gray-200 hover:border-orange-300 hover:bg-orange-50"
-            onClick={onBreathingExercise}
-          >
-            <Coffee className="w-5 h-5 text-orange-500" />
-            <span className="text-xs">Take Break</span>
-          </Button>
-
-          {/* AI Assistant */}
-          <Button
-            variant="outline"
-            className="flex flex-col items-center space-y-2 h-20 border-2 border-gray-200 hover:border-purple-300 hover:bg-purple-50"
-            onClick={handleAssistantClick}
-          >
-            <MessageCircle className="w-5 h-5 text-purple-500" />
-            <span className="text-xs">AI Help</span>
-          </Button>
+    <Card className="p-5">
+      <div className="space-y-5">
+        <div>
+          <p className="page-kicker">Session</p>
+          <h3 className="font-display text-lg font-bold">Learning controls</h3>
         </div>
 
-        <div className="space-y-1">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-medium text-gray-700">Camera device</label>
-            <button type="button" className="text-xs text-blue-600 hover:underline" onClick={loadCameras}>
-              Refresh list
-            </button>
+        <section className="space-y-3" aria-labelledby="sensor-controls">
+          <h4 id="sensor-controls" className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Sensors
+          </h4>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <ControlButton active={isCameraOn} label={isCameraOn ? "Camera on" : "Camera off"} onClick={handleCameraToggle}>
+              {isCameraOn ? <Camera className="h-5 w-5" /> : <CameraOff className="h-5 w-5" />}
+            </ControlButton>
+            <ControlButton active={isMicOn} label={isMicOn ? "Mic on" : "Mic off"} onClick={handleMicToggle}>
+              {isMicOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+            </ControlButton>
+            <ControlButton label="Take break" onClick={() => setIsBreathingOpen(true)}>
+              <Coffee className="h-5 w-5" />
+            </ControlButton>
+            <ControlButton label="AI help" onClick={handleManualAssistantToggle}>
+              <MessageCircle className="h-5 w-5" />
+            </ControlButton>
           </div>
-          <Select value={selectedCamera} onValueChange={handleCameraSelect}>
-            <SelectTrigger className="bg-white">
-              <SelectValue placeholder="Choose a camera" />
-            </SelectTrigger>
-            <SelectContent>
-              {cameras.length === 0 ? (
-                <SelectItem value="0">Camera 0 (built-in / default)</SelectItem>
-              ) : (
-                cameras.map((cam) => (
-                  <SelectItem key={cam.index} value={String(cam.index)}>
-                    {cam.name}
-                    {cam.available === false ? " — not responding" : ""}
-                  </SelectItem>
-                ))
-              )}
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-gray-500">
-            Camera turns on automatically. If the built-in webcam fails, pick an external USB camera here.
-          </p>
-        </div>
 
-        {/* Camera Status Indicator */}
-        {isCameraOn && (
-          <div className="mt-4 p-3 bg-blue-100 rounded-lg shadow text-sm font-medium text-gray-800">
-            📹 <strong>Camera Status:</strong> Active (Backend Processing)
-            <div className="text-xs text-gray-600 mt-1">
-              Using {cameras.find((c) => String(c.index) === selectedCamera)?.name || "default camera"}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between gap-2">
+              <label className="text-xs font-medium" htmlFor="camera-device">
+                Camera device
+              </label>
+              <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={loadCameras}>
+                <RefreshCw className="h-3.5 w-3.5" />
+                Refresh
+              </Button>
             </div>
+            <Select value={selectedCamera} onValueChange={handleCameraSelect}>
+              <SelectTrigger id="camera-device" className="bg-card">
+                <SelectValue placeholder="Choose a camera" />
+              </SelectTrigger>
+              <SelectContent>
+                {cameras.length === 0 ? (
+                  <SelectItem value="0">Camera 0 (default)</SelectItem>
+                ) : (
+                  cameras.map((cam) => (
+                    <SelectItem key={cam.index} value={String(cam.index)}>
+                      {cam.name}
+                      {cam.available === false ? " — not responding" : ""}
+                    </SelectItem>
+                  ))
+                )}
+              </SelectContent>
+            </Select>
+            {selectedUnavailable && (
+              <p className="text-xs text-destructive">Selected camera is not responding. Try another device.</p>
+            )}
           </div>
+
+          <div
+            className={cn(
+              "rounded-md border-2 px-3 py-2 text-sm",
+              detectionStatus === "error"
+                ? "border-destructive/40 bg-destructive/10"
+                : "border-border bg-muted/40"
+            )}
+          >
+            <p>
+              <span className="font-semibold">Camera:</span>{" "}
+              {isCameraOn
+                ? `On · ${selectedName || "default camera"}`
+                : "Off · emotion detection needs a sensor"}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {detectionStatus === "idle" && "Emotion detection is off."}
+              {detectionStatus === "initializing" && "Connecting to the detection service…"}
+              {detectionStatus === "active" && `Detection running · ${detectionSource}`}
+              {detectionStatus === "error" && "Detection service unreachable. Status is unknown, not live."}
+            </p>
+            {currentEmotion && detectionStatus === "active" && (
+              <p className="mt-1 text-xs">
+                Current mood: <span className="font-semibold">{currentEmotion}</span>
+              </p>
+            )}
+          </div>
+        </section>
+
+        {!compact && (
+          <section className="space-y-3 border-t-2 border-border pt-4" aria-labelledby="study-controls">
+            <h4 id="study-controls" className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              Study
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              <Button type="button" size="sm" variant="outline" onClick={() => setIsQuizOpen(true)}>
+                <BookOpen className="h-4 w-4" />
+                Quiz me
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={isFocusMode ? "default" : "outline"}
+                aria-pressed={isFocusMode}
+                onClick={() => setIsFocusMode(!isFocusMode)}
+              >
+                <Timer className="h-4 w-4" />
+                {isFocusMode ? "Focus on" : "Focus mode"}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={isDnd ? "default" : "outline"}
+                aria-pressed={isDnd}
+                onClick={() => setIsDnd(!isDnd)}
+              >
+                <ShieldAlert className="h-4 w-4" />
+                {isDnd ? "Do not disturb on" : "Do not disturb"}
+              </Button>
+            </div>
+          </section>
         )}
-
-        {/* Current Emotion */}
-        {emotion && (
-          <div className="mt-4 p-3 bg-yellow-100 rounded-lg shadow text-sm font-medium text-gray-800">
-            🎭 <strong>Current Mood:</strong> {emotion}
-            <div className="text-xs text-gray-600 mt-1">
-              {!isCameraOn && !isMicOn && "Based on interaction"}
-              {isCameraOn && !isMicOn && "Based on facial detection"}
-              {!isCameraOn && isMicOn && "Based on voice detection"}
-              {isCameraOn && isMicOn && "Based on combined detection"}
-            </div>
-            <div className="text-xs text-green-600 mt-1">
-              ✓ Live emotion detection active
-            </div>
-          </div>
-        )}
-
-        {/* Status when no emotion detected */}
-        {!emotion && (isCameraOn || isMicOn) && (
-          <div className="mt-4 p-3 bg-blue-100 rounded-lg shadow text-sm font-medium text-gray-800">
-            🔄 <strong>Status:</strong> Initializing emotion detection...
-            <div className="text-xs text-gray-600 mt-1">
-              {isCameraOn && "Camera active"}
-              {isMicOn && "Microphone active"}
-            </div>
-          </div>
-        )}
-
-        {/* Quick Actions */}
-        <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
-          <Button size="sm" variant="outline" className="hover:bg-blue-50 hover:border-blue-300">
-            <BookOpen className="w-4 h-4 mr-2" />
-            Quiz Me
-          </Button>
-          <Button size="sm" variant="outline" className="hover:bg-green-50 hover:border-green-300">
-            <Timer className="w-4 h-4 mr-2" />
-            Focus Mode
-          </Button>
-          <Button size="sm" variant="outline" className="hover:bg-red-50 hover:border-red-300">
-            Don't Disturb
-          </Button>
-        </div>
       </div>
     </Card>
   );

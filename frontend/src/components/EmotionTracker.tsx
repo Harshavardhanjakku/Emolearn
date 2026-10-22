@@ -1,84 +1,69 @@
-import { Card } from '@/components/ui/card';
+import { Card } from "@/components/ui/card";
+import { useSession } from "@/contexts/session-context";
+import { EMOTION_LABELS, emotionToEmoji } from "@/lib/emotions";
+import { cn } from "@/lib/utils";
 
-interface EmotionTrackerProps {
-  currentEmotion: string | null;
-  isActive: boolean;
-}
-
-export const EmotionTracker = ({ currentEmotion, isActive }: EmotionTrackerProps) => {
-  const emotions = [
-    { emoji: '😊', label: 'Happy', color: 'from-green-400 to-emerald-500', value: 'Happy' },
-    { emoji: '🤔', label: 'Confused', color: 'from-yellow-400 to-orange-500', value: 'Confused' },
-    { emoji: '😫', label: 'Frustrated', color: 'from-red-400 to-red-500', value: 'Frustrated' },
-    { emoji: '💤', label: 'Sleepy', color: 'from-blue-400 to-indigo-500', value: 'Sleepy' },
-    { emoji: '😐', label: 'Bored', color: 'from-gray-400 to-gray-500', value: 'Bored' },
-    { emoji: '🎯', label: 'Engaged', color: 'from-purple-400 to-purple-500', value: 'Engaged' },
-    { emoji: '👤', label: 'No face', color: 'from-slate-400 to-slate-500', value: 'Face Not Detected' },
-    { emoji: '❓', label: 'Unknown', color: 'from-stone-300 to-stone-400', value: 'Unknown' },
-  ];
-
-  // Map emotion string to emoji
-  const getEmotionEmoji = (emotion: string) => {
-    const emotionMap: { [key: string]: string } = {
-      'Happy': '😊',
-      'Confused': '🤔', 
-      'Frustrated': '😫',
-      'Sleepy': '💤',
-      'Bored': '😐',
-      'Engaged': '🎯',
-      'Face Not Detected': '👤',
-      'Unknown': '❓'
-    };
-    return emotionMap[emotion] || '❓';
-  };
-
-  const currentEmotionEmoji = currentEmotion ? getEmotionEmoji(currentEmotion) : '❓';
+export const EmotionTracker = () => {
+  const { currentEmotion, detectionStatus } = useSession();
+  const isActive = detectionStatus === "active";
 
   return (
-    <Card className="p-6 bg-white/60 backdrop-blur-sm border-0 shadow-lg">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-800">Emotion Detection</h3>
-          <div className="flex items-center space-x-2">
-            <div className={`w-3 h-3 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-300'}`}></div>
-            <span className="text-sm text-gray-600">{isActive ? 'Active' : 'Inactive'}</span>
-          </div>
+    <Card className="p-5">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div>
+          <p className="page-kicker">Now</p>
+          <h3 className="font-display text-lg font-bold">Current emotion</h3>
         </div>
-        
-        {/* Current Emotion Display */}
-        {currentEmotion && (
-          <div className="text-center p-4 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl text-white shadow-lg">
-            <div className="text-4xl mb-2">{currentEmotionEmoji}</div>
-            <div className="text-lg font-semibold">{currentEmotion}</div>
-            <div className="text-sm opacity-90">Current Mood</div>
+        <span
+          className={cn(
+            "rounded-md border-2 px-2 py-1 text-xs font-semibold",
+            isActive ? "border-success/40 bg-success/15 text-success" : "border-border text-muted-foreground"
+          )}
+        >
+          {detectionStatus === "active"
+            ? "Detecting"
+            : detectionStatus === "initializing"
+              ? "Starting"
+              : detectionStatus === "error"
+                ? "Unavailable"
+                : "Off"}
+        </span>
+      </div>
+
+      {currentEmotion && isActive ? (
+        <div className="mb-4 rounded-md border-2 border-foreground/15 bg-muted/50 p-4 text-center">
+          <div className="text-3xl" aria-hidden>
+            {emotionToEmoji(currentEmotion)}
           </div>
-        )}
-        
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-          {emotions.map((emotion) => (
+          <p className="mt-1 font-display text-lg font-semibold">{currentEmotion}</p>
+          <p className="text-xs text-muted-foreground">From the live detection pipeline</p>
+        </div>
+      ) : (
+        <div className="mb-4 rounded-md border-2 border-dashed border-border p-4 text-center text-sm text-muted-foreground">
+          {detectionStatus === "error"
+            ? "No live reading. The emotion service did not respond."
+            : "Enable camera or microphone on Learning or Focus to start detection. Nothing is shown as live until a reading arrives."}
+        </div>
+      )}
+
+      <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
+        {EMOTION_LABELS.map((label) => {
+          const selected = currentEmotion === label && isActive;
+          return (
             <div
-              key={emotion.emoji}
-              className={`text-center p-3 rounded-xl transition-all duration-300 ${
-                currentEmotion === emotion.value
-                  ? `bg-gradient-to-br ${emotion.color} text-white shadow-lg scale-105`
-                  : 'bg-gray-100/50 hover:bg-gray-200/50'
-              }`}
+              key={label}
+              className={cn(
+                "rounded-md border-2 px-1 py-2 text-center",
+                selected ? "border-primary bg-primary/10" : "border-border bg-card"
+              )}
             >
-              <div className="text-2xl mb-1">{emotion.emoji}</div>
-              <div className={`text-xs font-medium ${
-                currentEmotion === emotion.value ? 'text-white' : 'text-gray-600'
-              }`}>
-                {emotion.label}
+              <div className="text-lg" aria-hidden>
+                {emotionToEmoji(label)}
               </div>
+              <p className="mt-1 truncate text-[10px] font-medium">{label === "Face Not Detected" ? "No face" : label}</p>
             </div>
-          ))}
-        </div>
-        
-        {!isActive && !currentEmotion && (
-          <div className="text-center py-4 text-gray-500">
-            <p className="text-sm">Enable camera or microphone to start emotion detection</p>
-          </div>
-        )}
+          );
+        })}
       </div>
     </Card>
   );

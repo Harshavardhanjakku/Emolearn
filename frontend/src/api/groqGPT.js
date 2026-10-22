@@ -1,6 +1,7 @@
 ﻿
 // In Vite, only env vars prefixed with VITE_ are exposed to the browser.
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
 // Keep secure
 

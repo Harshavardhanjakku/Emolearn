@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" role="img" aria-labelledby="title desc">
+  <title id="title">EmoLearn emotion loop</title>
+  <desc id="desc">A five-step loop from sensor input to an adaptive learning intervention.</desc>
+  <defs>
+    <linearGradient id="line" x1="0" x2="1"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#06b6d4"/></linearGradient>
+  </defs>
+  <rect width="1000" height="360" rx="24" fill="#0f172a"/>
+  <g font-family="Inter,Segoe UI,sans-serif" text-anchor="middle">
+    <text x="500" y="44" font-size="24" font-weight="700" fill="#f8fafc">The adaptive learning loop</text>
+    <path d="M170 155 H830" stroke="url(#line)" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#172554" stroke="#818cf8" stroke-width="2">
+      <circle cx="120" cy="155" r="48"/><circle cx="310" cy="155" r="48"/><circle cx="500" cy="155" r="48"/><circle cx="690" cy="155" r="48"/><circle cx="880" cy="155" r="48"/>
+    </g>
+    <g fill="#fff" font-size="30">
+      <text x="120" y="165">◌</text><text x="310" y="165">⌁</text><text x="500" y="165">◆</text><text x="690" y="165">✦</text><text x="880" y="165">↻</text>
+    </g>
+    <g fill="#e0e7ff" font-size="16" font-weight="600">
+      <text x="120" y="235">Sense</text><text x="310" y="235">Combine</text><text x="500" y="235">Interpret</text><text x="690" y="235">Adapt</text><text x="880" y="235">Reflect</text>
+    </g>
+    <g fill="#94a3b8" font-size="13">
+      <text x="120" y="260">camera / mic / input</text><text x="310" y="260">multimodal state</text><text x="500" y="260">current emotion</text><text x="690" y="260">tutor or game</text><text x="880" y="260">mood timeline</text>
+    </g>
+    <path d="M880 290 C880 330 120 330 120 290" fill="none" stroke="#22d3ee" stroke-width="2" stroke-dasharray="7 8"/>
+    <text x="500" y="325" fill="#67e8f9" font-size="13">the next interaction becomes the next signal</text>
+  </g>
+</svg>

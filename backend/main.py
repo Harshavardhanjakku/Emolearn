@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import uvicorn
 import json
+import csv
 import os
 import threading
 import time
@@ -320,6 +321,67 @@ def get_detection_status():
 def get_all_emotions():
     """Get all emotion data from the JSON file"""
     return _load_emotion_log_list()
+
+
+@app.get("/api/emotion/history")
+def get_emotion_history():
+    """Return normalized JSON and CSV history with exact duplicate events merged."""
+    records = []
+    json_path = os.path.join(os.path.dirname(__file__), "emotion_log.json")
+    csv_path = os.path.join(os.path.dirname(__file__), "emotion_log.csv")
+
+    try:
+        with open(json_path, "r", encoding="utf-8") as file:
+            json_entries = json.load(file)
+    except (OSError, json.JSONDecodeError):
+        json_entries = []
+
+    for entry in json_entries if isinstance(json_entries, list) else []:
+        emotion = entry.get("final_emotion") or "Unknown"
+        timestamp = entry.get("time")
+        if timestamp:
+            records.append({
+                "time": timestamp,
+                "emotion": emotion,
+                "value": entry.get("value"),
+                "source": "json",
+                "facial_emotion": entry.get("facial_emotion"),
+                "voice_emotion": entry.get("voice_emotion"),
+                "interaction_emotion": entry.get("interaction_emotion"),
+            })
+
+    try:
+        with open(csv_path, "r", encoding="utf-8", newline="") as file:
+            for entry in csv.DictReader(file):
+                if entry.get("timestamp") and entry.get("emotion"):
+                    records.append({
+                        "time": entry["timestamp"],
+                        "emotion": entry["emotion"] or "Unknown",
+                        "value": None,
+                        "source": f"csv:{entry.get('source') or 'unknown'}",
+                        "facial_emotion": None,
+                        "voice_emotion": None,
+                        "interaction_emotion": None,
+                    })
+    except OSError:
+        pass
+
+    # JSON and CSV can record the same detector event. Use normalized timestamp
+    # plus final emotion as the event identity and retain both source labels.
+    merged = {}
+    for record in records:
+        timestamp = str(record["time"]).replace("T", " ")[:19]
+        key = (timestamp, record["emotion"])
+        if key not in merged:
+            merged[key] = {**record, "source": [record["source"]]}
+            continue
+        current = merged[key]
+        if record["source"] not in current["source"]:
+            current["source"].append(record["source"])
+        if current.get("value") is None and record.get("value") is not None:
+            current["value"] = record["value"]
+
+    return sorted(merged.values(), key=lambda item: item["time"])
 
 @app.get("/games/{emotion}/{game_name}")
 def serve_game(emotion: str, game_name: str):
@@ -660,4 +722,3 @@ def get_camera_status():
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
-
